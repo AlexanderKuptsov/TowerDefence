@@ -14,15 +14,14 @@ public class Game {
     private WaveManager waveManager;
 
     //Testing
-    TowerCannon tower;
+
 
     public Game(int[][] map) {
         grid = new TileGrid(map);
-        player = new Player(grid);
+
         waveManager = new WaveManager(new Enemy(quickLoad("tankNavy"),
                 grid.getTile(0, 5), grid, 64, 64, 50, 100), 3, 4);
-
-        tower = new TowerCannon(quickLoad("cannonBase"), grid.getTile(2, 3), 10);
+        player = new Player(grid, waveManager);
 
     }
 
@@ -31,6 +30,6 @@ public class Game {
         waveManager.update();
         player.update();
 
-        tower.update();
+
     }
 }

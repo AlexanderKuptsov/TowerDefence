@@ -53,4 +53,8 @@ public class Wave {
     public boolean isCompleted() {
         return waveComleted;
     }
+
+    public ArrayList<Enemy> getEnemies() {
+        return enemyList;
+    }
 }

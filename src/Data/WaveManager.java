@@ -31,4 +31,8 @@ public class WaveManager {
         waveNumber++;
         System.out.println("Wave " + waveNumber);
     }
+
+    public Wave getCurrentWave() {
+        return currentWave;
+    }
 }
