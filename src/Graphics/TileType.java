@@ -15,4 +15,8 @@ public enum TileType {
         this.textureName = textureName;
         this.buildable = buildable;
     }
+
+    public boolean isBuildable() {
+        return buildable;
+    }
 }

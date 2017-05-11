@@ -1,5 +1,6 @@
 package Graphics;
 
+import Data.Main.Game;
 import org.newdawn.slick.opengl.Texture;
 
 import static Helpers.Artist.*;
@@ -22,15 +23,15 @@ public class Tile {
     }
 
     public void draw() {
-        DrawQuadTexture(texture, x, y, width, height);
+        drawQuadTexture(texture, x, y, width, height);
     }
 
     public int getXPlace() {
-        return (int) x / 64;
+        return (int) x / TILE_SIZE;
     }
 
     public int getYPlace() {
-        return (int) y / 64;
+        return (int) y / TILE_SIZE;
     }
 
     public float getX() {

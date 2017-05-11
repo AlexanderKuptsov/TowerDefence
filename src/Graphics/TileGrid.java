@@ -2,6 +2,8 @@ package Graphics;
 
 import Helpers.Artist;
 
+import static Helpers.Artist.TILE_SIZE;
+
 /**
  * Created by shurik on 28.04.2017.
  */
@@ -10,13 +12,14 @@ public class TileGrid {
     private int tileWide, tileHigh;
 
     public TileGrid() { // всё поле в траве
-        map = new Tile[Artist.WIDTH / 64][Artist.HEIGHT / 64];
+        this.tileWide = 20;
+        this.tileHigh = 15;
+        map = new Tile[Artist.WIDTH / TILE_SIZE][Artist.HEIGHT / TILE_SIZE];
         for (int i = 0; i < map.length; i++) {
             for (int j = 0; j < map[i].length; j++) {
-                map[i][j] = new Tile(i * 64, j * 64, 64, 64, TileType.Grass);
+                map[i][j] = new Tile(i * TILE_SIZE, j * TILE_SIZE, TILE_SIZE, TILE_SIZE, TileType.Grass);
             }
         }
-
     }
 
     public TileGrid(int[][] newMap) {
@@ -28,22 +31,22 @@ public class TileGrid {
             for (int j = 0; j < map[i].length; j++) {
                 switch (newMap[j][i]) {
                     case 0:
-                        map[i][j] = new Tile(i * 64, j * 64, 64, 64, TileType.Grass);
+                        map[i][j] = new Tile(i * TILE_SIZE, j * TILE_SIZE, TILE_SIZE, TILE_SIZE, TileType.Grass);
                         break;
                     case 1:
-                        map[i][j] = new Tile(i * 64, j * 64, 64, 64, TileType.Dirt);
+                        map[i][j] = new Tile(i * TILE_SIZE, j * TILE_SIZE, TILE_SIZE, TILE_SIZE, TileType.Dirt);
                         break;
                     case 2:
-                        map[i][j] = new Tile(i * 64, j * 64, 64, 64, TileType.Water);
+                        map[i][j] = new Tile(i * TILE_SIZE, j * TILE_SIZE, TILE_SIZE, TILE_SIZE, TileType.Water);
                         break;
                     case 3:
-                        map[i][j] = new Tile(i * 64, j * 64, 64, 64, TileType.Sand);
+                        map[i][j] = new Tile(i * TILE_SIZE, j * TILE_SIZE, TILE_SIZE, TILE_SIZE, TileType.Sand);
                         break;
                     case 4:
-                        map[i][j] = new Tile(i * 64, j * 64, 64, 64, TileType.Bush);
+                        map[i][j] = new Tile(i * TILE_SIZE, j * TILE_SIZE, TILE_SIZE, TILE_SIZE, TileType.Bush);
                         break;
                     case 5:
-                        map[i][j] = new Tile(i * 64, j * 64, 64, 64, TileType.Stones);
+                        map[i][j] = new Tile(i * TILE_SIZE, j * TILE_SIZE, TILE_SIZE, TILE_SIZE, TileType.Stones);
                         break;
                 }
             }
@@ -51,7 +54,7 @@ public class TileGrid {
     }
 
     public void setTile(int xCoord, int yCoord, TileType type) {
-        map[xCoord][yCoord] = new Tile(xCoord * 64, yCoord * 64, 64, 64, type);
+        map[xCoord][yCoord] = new Tile(xCoord * TILE_SIZE, yCoord * TILE_SIZE, TILE_SIZE, TILE_SIZE, type);
     }
 
     public Tile getTile(int xPlace, int yPlace) {

@@ -16,7 +16,7 @@ import static org.lwjgl.opengl.GL11.*;
  * Created by shurik on 28.04.2017.
  */
 public class Artist {
-    public static final int WIDTH = 1280, HEIGHT = 960;
+    public static final int WIDTH = 1280, HEIGHT = 960, TILE_SIZE = 64;
 
     public static void BeginSession() {
         Display.setTitle("Uncrackable Defence");
@@ -36,7 +36,13 @@ public class Artist {
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     }
 
-    public static void DrawQuadTexture(Texture tex, float x, float y, float width, float height) {
+    public static boolean checkCollision(float x1, float y1, float width1, float height1,
+                                         float x2, float y2, float width2, float height2) {
+
+        return x1 + width1 > x2 && x1 < x2 + width2 && y1 + height1 > y2 && y1 < y2 + height2;
+    }
+
+    public static void drawQuadTexture(Texture tex, float x, float y, float width, float height) {
         tex.bind();
         glTranslatef(x, y, 0);
 
@@ -58,7 +64,7 @@ public class Artist {
         glLoadIdentity();
     }
 
-    public static void DrawQuadTextureRotation(Texture tex, float x, float y, float width, float height, float angle) {
+    public static void drawQuadTextureRotation(Texture tex, float x, float y, float width, float height, float angle) {
         tex.bind();
         glTranslatef(x + width / 2, y + height / 2, 0);
         glRotatef(angle, 0, 0, 1);

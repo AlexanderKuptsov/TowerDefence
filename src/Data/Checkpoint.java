@@ -20,11 +20,11 @@ public class Checkpoint {
         return tile;
     }
 
-    public int getxDirection() {
+    public int getXDirection() {
         return xDirection;
     }
 
-    public int getyDirection() {
+    public int getYDirection() {
         return yDirection;
     }
 }

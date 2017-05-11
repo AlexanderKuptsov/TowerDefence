@@ -2,6 +2,7 @@ package Data;
 
 import Graphics.TileGrid;
 import Graphics.TileType;
+import Helpers.Clock;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
@@ -16,8 +17,6 @@ public class Player {
 
     private TileGrid grid;
     private TileType[] types;
-    private int index;
-
     private TowerCannon tower;
     private ArrayList<Enemy> enemies;
     private WaveManager waveManager;
@@ -33,45 +32,48 @@ public class Player {
         this.types[3] = TileType.Sand;
         this.types[4] = TileType.Bush;
         this.types[5] = TileType.Stones;
-        this.index = 0;
         this.waveManager = waveManager;
         this.towerList = new ArrayList<TowerCannon>();
-        this.leftMouseButtonDown = false;
-    }
-
-    public void setTile() {
-        grid.setTile((int) Math.floor(Mouse.getX() / 64),
-                (int) Math.floor((HEIGHT - Mouse.getY() - 1) / 64), types[index]);
+        this.leftMouseButtonDown = true;
     }
 
     public void update() {
 
-        for (TowerCannon t : towerList) t.update();
+        for (TowerCannon t : towerList) {
+            t.update();
+            t.updateEnemyList(waveManager.getCurrentWave().getEnemies());
+        }
 
         // Mouse Input
-        if (Mouse.isButtonDown(0) && !leftMouseButtonDown) {
-            towerList.add((new TowerCannon(quickLoad("cannonBase"),
-                    grid.getTile(Mouse.getX() / 64, (HEIGHT - Mouse.getY() - 1) / 64),
-                    10, waveManager.getCurrentWave().getEnemies())));
+        int mouseX = Mouse.getX() / TILE_SIZE;
+        int mouseY = (HEIGHT - Mouse.getY() - 1) / TILE_SIZE;
 
-            //setTile();
+        if (Mouse.isButtonDown(0) && //проверка на то, что ЛКМ нажали
+                !leftMouseButtonDown &&    // и отпустили
+                grid.getTile(mouseX, mouseY).getType().isBuildable() && // проверка поверхности(можно ли на ней строить)
+                isPlaceFree(mouseX, mouseY)) { // свободна ли клетка
+
+            towerList.add((new TowerCannon(quickLoad("cannonBase"),
+                    grid.getTile(mouseX, mouseY),
+                    10, TILE_SIZE * 4, waveManager.getCurrentWave().getEnemies())));
         }
         leftMouseButtonDown = Mouse.isButtonDown(0);
+
         // Keyboard Input
         while (Keyboard.next()) {
             if (Keyboard.getEventKey() == Keyboard.KEY_RIGHT && Keyboard.getEventKeyState()) {
-                moveIndex();
+                Clock.changeMultiplier(0.2f);
             }
-            if (Keyboard.getEventKey() == Keyboard.KEY_T && Keyboard.getEventKeyState()) {
-                //towerList.add((new TowerCannon(quickLoad("cannonBase"), grid.getTile(3, 3), 10, waveManager.getCurrentWave().getEnemies())));
+            if (Keyboard.getEventKey() == Keyboard.KEY_LEFT && Keyboard.getEventKeyState()) {
+                Clock.changeMultiplier(-0.2f);
             }
         }
     }
 
-    private void moveIndex() {
-        index++;
-        if (index > types.length - 1) {
-            index = 0;
+    private boolean isPlaceFree(int mouseX, int mouseY) {
+        for (TowerCannon t : towerList) {
+            if (t.getX() / TILE_SIZE == mouseX && t.getY() / TILE_SIZE == mouseY) return false;
         }
+        return true;
     }
 }

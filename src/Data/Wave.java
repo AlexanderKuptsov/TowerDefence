@@ -13,7 +13,7 @@ public class Wave {
     private Enemy enemyType;
     private ArrayList<Enemy> enemyList;
     private int numberOfEnemies;
-    private boolean waveComleted;
+    private boolean waveCompleted;
 
     public Wave(Enemy enemyType, float spawnTime, int numberOfEnemies) {
         this.enemyType = enemyType;
@@ -21,7 +21,7 @@ public class Wave {
         this.numberOfEnemies = numberOfEnemies;
         this.timeSinceLastSpawn = 0;
         this.enemyList = new ArrayList<Enemy>();
-        this.waveComleted = false;
+        this.waveCompleted = false;
 
         spawn();
     }
@@ -42,7 +42,7 @@ public class Wave {
                 enemy.draw();
             }
         }
-        if (allEnemiesDead) waveComleted = true;
+        if (allEnemiesDead) waveCompleted = true;
     }
 
     private void spawn() {
@@ -51,7 +51,7 @@ public class Wave {
     }
 
     public boolean isCompleted() {
-        return waveComleted;
+        return waveCompleted;
     }
 
     public ArrayList<Enemy> getEnemies() {

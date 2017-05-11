@@ -12,7 +12,7 @@ import static Helpers.Clock.*;
 /**
  * Created by shurik on 29.04.2017.
  */
-public class Enemy {
+public class Enemy implements Entity {
     private int width, height, health, currentCheckpoint;
     private float x, y, speed;
     private Texture texture;
@@ -49,22 +49,22 @@ public class Enemy {
             first = false;
         } else {
             if (checkpointReached()) {
-                if (currentCheckpoint + 1 == checkpoints.size()) die();
+                if (currentCheckpoint  == checkpoints.size()-1) die();
                 else currentCheckpoint++;
             } else {
 
-                if (checkpoints.get(currentCheckpoint).getxDirection() == 1) {
+                if (checkpoints.get(currentCheckpoint).getXDirection() == 1) {
                     texture = quickLoad("tankNavy");
-                } else if (checkpoints.get(currentCheckpoint).getxDirection() == -1) {
+                } else if (checkpoints.get(currentCheckpoint).getXDirection() == -1) {
                     texture = quickLoad("tankNavyLEFT");
-                } else if (checkpoints.get(currentCheckpoint).getyDirection() == -1) {
+                } else if (checkpoints.get(currentCheckpoint).getYDirection() == -1) {
                     texture = quickLoad("tankNavyUP");
-                } else if (checkpoints.get(currentCheckpoint).getyDirection() == 1) {
+                } else if (checkpoints.get(currentCheckpoint).getYDirection() == 1) {
                     texture = quickLoad("tankNavyDOWN");
                 }
 
-                x += delta() * checkpoints.get(currentCheckpoint).getxDirection() * speed;
-                y += delta() * checkpoints.get(currentCheckpoint).getyDirection() * speed;
+                x += delta() * checkpoints.get(currentCheckpoint).getXDirection() * speed;
+                y += delta() * checkpoints.get(currentCheckpoint).getYDirection() * speed;
             }
         }
     }
@@ -78,7 +78,6 @@ public class Enemy {
             x = t.getX();
             y = t.getY();
         }
-
         return reached;
     }
 
@@ -103,7 +102,7 @@ public class Enemy {
 
     private Checkpoint findNextCheckpoint(Tile start, int[] dir) {
         Tile next = null;
-        Checkpoint c = null;
+        Checkpoint c;
 
         boolean found = false; // проверка, найден ли следующий checkpoint
         int counter = 1; // счетчик цикла
@@ -148,8 +147,12 @@ public class Enemy {
             dir[0] = 2;
             dir[1] = 2;
         }
-
         return dir;
+    }
+
+    public void damage(int amountOfDamage) {
+        health -= amountOfDamage;
+        if (health <= 0) die();
     }
 
     private void die() {
@@ -157,7 +160,7 @@ public class Enemy {
     }
 
     public void draw() {
-        DrawQuadTexture(texture, x, y, width, height);
+        drawQuadTexture(texture, x, y, width, height);
     }
 
     public int getWidth() {
