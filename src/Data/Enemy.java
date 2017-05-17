@@ -13,9 +13,9 @@ import static Helpers.Clock.*;
  * Created by shurik on 29.04.2017.
  */
 public class Enemy implements Entity {
-    private int width, height, health, currentCheckpoint;
-    private float x, y, speed;
-    private Texture texture;
+    private int width, height, currentCheckpoint;
+    private float x, y, speed, startSpeed, startHealth, health;
+    private Texture texture, healthBackGround, healthForeGround, healthBorder;
     private Tile startTile;
     private boolean first = true, alive = true;
     private TileGrid grid;
@@ -23,14 +23,19 @@ public class Enemy implements Entity {
     private ArrayList<Checkpoint> checkpoints;
     private int[] directions;
 
-    public Enemy(Texture texture, Tile startTile, TileGrid grid, int width, int height, float speed, int health) {
+    public Enemy(Texture texture, Tile startTile, TileGrid grid, int width, int height, float speed, float health) {
         this.texture = texture;
+        this.healthBackGround = quickLoad("healthBackGround");
+        this.healthForeGround = quickLoad("healthForeGround");
+        this.healthBorder = quickLoad("healthBorder");
         this.startTile = startTile;
         this.x = startTile.getX();
         this.y = startTile.getY();
         this.width = width;
         this.height = height;
         this.speed = speed;
+        this.startSpeed = speed;
+        this.startHealth = health;
         this.health = health;
         this.grid = grid;
 
@@ -49,7 +54,10 @@ public class Enemy implements Entity {
             first = false;
         } else {
             if (checkpointReached()) {
-                if (currentCheckpoint  == checkpoints.size()-1) die();
+                if (currentCheckpoint == checkpoints.size() - 1)
+                    /*if (grid.getTile((int) getX() / TILE_SIZE + checkpoints.get(currentCheckpoint).getXDirection()
+                            , (int) getY() / TILE_SIZE + checkpoints.get(currentCheckpoint).getYDirection()).getType() ==
+                            TileType.Water)*/ endOfMazeReached();
                 else currentCheckpoint++;
             } else {
 
@@ -67,6 +75,11 @@ public class Enemy implements Entity {
                 y += delta() * checkpoints.get(currentCheckpoint).getYDirection() * speed;
             }
         }
+    }
+
+    private void endOfMazeReached() {
+        die();
+        Player.modifyLives(-1);
     }
 
     private boolean checkpointReached() {
@@ -152,7 +165,10 @@ public class Enemy implements Entity {
 
     public void damage(int amountOfDamage) {
         health -= amountOfDamage;
-        if (health <= 0) die();
+        if (health <= 0) {
+            die();
+            Player.modifyCash(5);
+        }
     }
 
     private void die() {
@@ -160,7 +176,11 @@ public class Enemy implements Entity {
     }
 
     public void draw() {
+        float healthPercent = health / startHealth;
         drawQuadTexture(texture, x, y, width, height);
+        drawQuadTexture(healthBackGround, x, y - TILE_SIZE / 4, width, 8);
+        drawQuadTexture(healthForeGround, x, y - TILE_SIZE / 4, TILE_SIZE * healthPercent, 8);
+        drawQuadTexture(healthBorder, x, y - TILE_SIZE / 4, width, 8);
     }
 
     public int getWidth() {
@@ -179,11 +199,11 @@ public class Enemy implements Entity {
         this.height = height;
     }
 
-    public int getHealth() {
+    public float getHealth() {
         return health;
     }
 
-    public void setHealth(int health) {
+    public void setHealth(float health) {
         this.health = health;
     }
 
@@ -209,6 +229,10 @@ public class Enemy implements Entity {
 
     public void setSpeed(float speed) {
         this.speed = speed;
+    }
+
+    public float getStartSpeed() {
+        return startSpeed;
     }
 
     public Texture getTexture() {

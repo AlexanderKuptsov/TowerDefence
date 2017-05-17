@@ -19,7 +19,7 @@ public class Clock {
         long currentTime = getTime();
         int delta = (int) (currentTime - lastFrame);
         lastFrame = getTime();
-        if (delta*0.001f>0.05f) return 0.05f;
+        if (delta * 0.001f > 0.05f) return 0.05f;
         return delta * 0.001f;
     }
 
@@ -42,7 +42,7 @@ public class Clock {
     }
 
     public static void changeMultiplier(float change) {
-        if (!(multiplier + change < -1 && multiplier + change > 7)) {
+        if (!(multiplier + change < -1 && multiplier + change > 6)) {
             multiplier += change;
         }
     }

@@ -1,4 +1,4 @@
-package Data.Main;
+package Main;
 
 import Helpers.StateManager;
 import UI.UI;

@@ -23,16 +23,17 @@ public class Artist {
         try {
             Display.setDisplayMode(new DisplayMode(WIDTH, HEIGHT));
             Display.create();
+            Display.swapBuffers();
         } catch (LWJGLException e) {
             e.printStackTrace();
         }
-
-        glMatrixMode(GL_PROJECTION); //
+        // setup for 2D
+        glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
         glOrtho(0, WIDTH, HEIGHT, 0, 1, -1); // camera
         glMatrixMode(GL_MODELVIEW);
-        glEnable(GL_TEXTURE_2D);
-        glEnable(GL_BLEND);
+        glEnable(GL_TEXTURE_2D);  // enable texture
+        glEnable(GL_BLEND); // enable transparency
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     }
 
@@ -99,8 +100,6 @@ public class Artist {
     }
 
     public static Texture quickLoad(String name) {
-        Texture tex = null;
-        tex = loadTexture("res/" + name + ".png", "PNG");
-        return tex;
+        return loadTexture("res/" + name + ".png", "PNG");
     }
 }

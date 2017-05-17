@@ -1,4 +1,4 @@
-package Data.Main;
+package Main;
 
 import Helpers.Clock;
 import Helpers.StateManager;
@@ -21,6 +21,7 @@ public class Boot {
             Display.sync(60);
         }
         Display.destroy();
+        System.exit(0);
     }
 
     public static void main(String[] args) {

@@ -1,6 +1,7 @@
-package Data;
+package Towers;
 
-import Data.Main.Game;
+import Data.Enemy;
+import Data.Entity;
 import org.newdawn.slick.opengl.Texture;
 
 import static Helpers.Clock.*;
@@ -9,7 +10,7 @@ import static Helpers.Artist.*;
 /**
  * Created by shurik on 01.05.2017.
  */
-public class Projectile implements Entity {
+public abstract class Projectile implements Entity {
 
     private Texture texture;
     private float x, y, speed, xVelocity, yVelocity;
@@ -17,14 +18,14 @@ public class Projectile implements Entity {
     private Enemy target;
     private boolean alive;
 
-    public Projectile(Texture texture, Enemy target, float x, float y, int width, int height, float speed, int damage) {
-        this.texture = texture;
+    public Projectile(ProjectileType type, Enemy target, float x, float y, int width, int height) {
+        this.texture = type.texture;
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
-        this.speed = speed;
-        this.damage = damage;
+        this.speed = type.speed;
+        this.damage = type.damage;
         this.target = target;
         this.alive = true;
         this.xVelocity = 0f;
@@ -50,6 +51,29 @@ public class Projectile implements Entity {
         return (float) Math.toDegrees(angleTemp) - 90;
     }
 
+    public void damage() {
+        target.damage(damage);
+        alive = false;
+    }
+
+    public void update() {
+        if (alive) {
+            calculateDirection();
+            x += xVelocity * speed * delta();
+            y += yVelocity * speed * delta();
+
+            if (checkCollision(x, y, width, height,
+                    target.getX(), target.getY(), target.getWidth(), target.getHeight())) {
+                damage();
+            }
+            draw();
+        }
+    }
+
+    public void draw() {
+        drawQuadTextureRotation(texture, x, y, 32, 32, calculateAngle());
+    }
+
     public float getX() {
         return x;
     }
@@ -61,7 +85,6 @@ public class Projectile implements Entity {
     public int getWidth() {
         return width;
     }
-
 
     public int getHeight() {
         return height;
@@ -83,22 +106,11 @@ public class Projectile implements Entity {
         this.height = height;
     }
 
-    public void update() {
-        if (alive) {
-            calculateDirection();
-            x += xVelocity * speed * delta();
-            y += yVelocity * speed * delta();
-
-            if (checkCollision(x, y, width, height,
-                    target.getX(), target.getY(), target.getWidth(), target.getHeight())) {
-                target.damage(damage);
-                alive = false;
-            }
-            draw();
-        }
+    public Enemy getTarget() {
+        return target;
     }
 
-    public void draw() {
-        drawQuadTextureRotation(texture, x, y, 32, 32, calculateAngle());
+    public void setAlive(boolean status) {
+        alive = status;
     }
 }

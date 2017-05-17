@@ -1,8 +1,8 @@
 package Helpers;
 
-import Data.Main.Editor;
-import Data.Main.Game;
-import Data.Main.MainMenu;
+import Main.Editor;
+import Main.Game;
+import Main.MainMenu;
 
 /**
  * Created by shurik on 06.05.2017.

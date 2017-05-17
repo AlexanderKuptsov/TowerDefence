@@ -1,4 +1,4 @@
-package Data.Main;
+package Main;
 
 import Graphics.TileGrid;
 import Graphics.TileType;
@@ -46,7 +46,7 @@ public class Editor {
                 moveIndex();
             }
             if (Keyboard.getEventKey() == Keyboard.KEY_S && Keyboard.getEventKeyState()) {
-                saveMap("newMarvelousMap1", grid);
+                saveMap("newMarvelousMap2", grid);
             }
         }
     }

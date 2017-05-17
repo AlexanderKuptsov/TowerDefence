@@ -2,7 +2,9 @@ package Graphics;
 
 import Helpers.Artist;
 
+import static Helpers.Artist.HEIGHT;
 import static Helpers.Artist.TILE_SIZE;
+import static Helpers.Artist.WIDTH;
 
 /**
  * Created by shurik on 28.04.2017.
@@ -12,8 +14,8 @@ public class TileGrid {
     private int tileWide, tileHigh;
 
     public TileGrid() { // всё поле в траве
-        this.tileWide = 20;
-        this.tileHigh = 15;
+        this.tileWide = WIDTH / TILE_SIZE;
+        this.tileHigh = HEIGHT / TILE_SIZE;
         map = new Tile[Artist.WIDTH / TILE_SIZE][Artist.HEIGHT / TILE_SIZE];
         for (int i = 0; i < map.length; i++) {
             for (int j = 0; j < map[i].length; j++) {
