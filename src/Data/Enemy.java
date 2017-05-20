@@ -17,8 +17,9 @@ public class Enemy implements Entity {
     private float x, y, speed, startSpeed, startHealth, health;
     private Texture texture, healthBackGround, healthForeGround, healthBorder;
     private Tile startTile;
-    private boolean first = true, alive = true;
+    private boolean first, alive;
     private TileGrid grid;
+    private int angle;
 
     private ArrayList<Checkpoint> checkpoints;
     private int[] directions;
@@ -38,6 +39,9 @@ public class Enemy implements Entity {
         this.startHealth = health;
         this.health = health;
         this.grid = grid;
+        this.first = true;
+        this.alive = true;
+        this.angle = 180;
 
         this.checkpoints = new ArrayList<Checkpoint>();
         this.directions = new int[2];
@@ -50,7 +54,7 @@ public class Enemy implements Entity {
     }
 
     public void update() {
-        if (first) {
+        if (first) { // is it the first update of the class
             first = false;
         } else {
             if (checkpointReached()) {
@@ -63,12 +67,16 @@ public class Enemy implements Entity {
 
                 if (checkpoints.get(currentCheckpoint).getXDirection() == 1) {
                     texture = quickLoad("tankNavy");
+                    angle = 180;
                 } else if (checkpoints.get(currentCheckpoint).getXDirection() == -1) {
                     texture = quickLoad("tankNavyLEFT");
+                    angle = 180;
                 } else if (checkpoints.get(currentCheckpoint).getYDirection() == -1) {
                     texture = quickLoad("tankNavyUP");
+                    angle = 90;
                 } else if (checkpoints.get(currentCheckpoint).getYDirection() == 1) {
                     texture = quickLoad("tankNavyDOWN");
+                    angle = -90;
                 }
 
                 x += delta() * checkpoints.get(currentCheckpoint).getXDirection() * speed;
@@ -163,7 +171,7 @@ public class Enemy implements Entity {
         return dir;
     }
 
-    public void damage(int amountOfDamage) {
+    public void damage(float amountOfDamage) {
         health -= amountOfDamage;
         if (health <= 0) {
             die();
@@ -181,6 +189,12 @@ public class Enemy implements Entity {
         drawQuadTexture(healthBackGround, x, y - TILE_SIZE / 4, width, 8);
         drawQuadTexture(healthForeGround, x, y - TILE_SIZE / 4, TILE_SIZE * healthPercent, 8);
         drawQuadTexture(healthBorder, x, y - TILE_SIZE / 4, width, 8);
+        if (healthPercent < 0.3) {
+            int deltaPos = 0;
+            if (angle == 90 || angle == -90) deltaPos = 16;
+            drawQuadTextureRotation(quickLoad("fire"), x + TILE_SIZE / 2 - 48, y + TILE_SIZE / 2 - 64 + deltaPos,
+                    96, 96, angle);
+        }
     }
 
     public int getWidth() {

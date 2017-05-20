@@ -10,24 +10,27 @@ import static Helpers.Artist.*;
 public enum TowerType {
 
     CannonRed(new Texture[]{quickLoad("Towers/cannonBase"), quickLoad("Towers/cannonGun")},
-            ProjectileType.Rocket, 3, TILE_SIZE * 3, 0.3f),
+            ProjectileType.Rocket, TILE_SIZE * 3, 0.3f, 0),
 
-    CannonBlue(new Texture[]{quickLoad("Towers/towerBase"), quickLoad("Towers/towerPurpleGun")},
-            ProjectileType.Rocket, 15, TILE_SIZE * 7, 3),
+    CannonPurple(new Texture[]{quickLoad("Towers/towerBase"), quickLoad("Towers/towerPurpleGun")},
+            ProjectileType.Rocket, TILE_SIZE * 3.5f, 2, 15),
 
-    CannonIce(new Texture[]{quickLoad("Towers/cannonBaseBlue"),
-            quickLoad("Towers/cannonGunBlue")}, ProjectileType.IceBall, 2, TILE_SIZE * 4, 1.5f);
+    CannonIce(new Texture[]{quickLoad("Towers/cannonBaseBlue"), quickLoad("Towers/cannonGunBlue")},
+            ProjectileType.IceBall, TILE_SIZE * 2.5f, 1.5f, 20),
+
+    FlameThrower(new Texture[]{quickLoad("Towers/cannonBase"), quickLoad("Towers/cannonGun")},
+            ProjectileType.Fire, TILE_SIZE * 2.5f, 0.06f, 40);
 
     Texture[] textures;
     ProjectileType projectileType;
-    int damage, range;
-    float firingRate;
+    int cost;
+    float range, firingRate;
 
-    TowerType(Texture[] textures, ProjectileType projectileType, int damage, int range, float firingRate) {
+    TowerType(Texture[] textures, ProjectileType projectileType, float range, float firingRate, int cost) {
         this.textures = textures;
         this.projectileType = projectileType;
-        this.damage = damage;
         this.range = range;
         this.firingRate = firingRate;
+        this.cost = cost;
     }
 }

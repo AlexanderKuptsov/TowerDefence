@@ -1,8 +1,10 @@
 package Data;
 
+import Graphics.Tile;
 import Graphics.TileGrid;
 import Graphics.TileType;
 import Helpers.Clock;
+import Main.Boot;
 import Towers.*;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -21,7 +23,8 @@ public class Player {
     private ArrayList<Enemy> enemies;
     private WaveManager waveManager;
     private ArrayList<Tower> towerList;
-    private boolean leftMouseButtonDown, rightMouseButtonDown;
+    private boolean leftMouseButtonDown, rightMouseButtonDown, holdingTower;
+    private Tower tempTower;
 
     public static int Cash, Lives;
 
@@ -38,13 +41,17 @@ public class Player {
         this.towerList = new ArrayList<Tower>();
         this.leftMouseButtonDown = true;
         this.rightMouseButtonDown = false;
+        this.holdingTower = false;
+        this.tempTower = null;
         Cash = 0;
         Lives = 0;
     }
 
-    public void setup() {
+    public static void setup() {
         Cash = 75;
-        Lives = 10;
+        Lives = 5;
+        System.out.println("$" + Cash);
+        System.out.println("Lives: " + Lives);
     }
 
     public static boolean modifyCash(int amount) {
@@ -62,6 +69,12 @@ public class Player {
     }
 
     public void update() {
+        //Update holding tower
+        if (holdingTower) {
+            tempTower.setX(getMouseTile().getX());
+            tempTower.setY(getMouseTile().getY());
+            tempTower.draw();
+        }
 
         for (Tower t : towerList) {
             t.update();
@@ -70,23 +83,14 @@ public class Player {
         }
 
         // Mouse Input
-        int mouseX = Mouse.getX() / TILE_SIZE;
-        int mouseY = (HEIGHT - Mouse.getY() - 1) / TILE_SIZE;
         // свободна ли клетка
-        boolean possibleToBuild = grid.getTile(mouseX, mouseY).getType().isBuildable() && isPlaceFree(mouseX, mouseY);
-
-        if (Mouse.isButtonDown(0) && !leftMouseButtonDown && possibleToBuild) {
-            if (modifyCash(-15))
-                towerList.add(new TowerCannon(TowerType.CannonBlue, grid.getTile(mouseX, mouseY), waveManager.getCurrentWave().getEnemies()));
+        boolean possibleToBuild = getMouseTile().getType().isBuildable() && isPlaceFree(getMouseTile());
+        if (Mouse.isButtonDown(0) && !rightMouseButtonDown && possibleToBuild) {
+            placeTower();
         }
 
-        if (Mouse.isButtonDown(1) && !rightMouseButtonDown && possibleToBuild) {
-            if (modifyCash(-25))
-                towerList.add(new TowerIce(TowerType.CannonIce, grid.getTile(mouseX, mouseY), waveManager.getCurrentWave().getEnemies()));
-        }
-
-        leftMouseButtonDown = Mouse.isButtonDown(0);
-        rightMouseButtonDown = Mouse.isButtonDown(1);
+        leftMouseButtonDown = Mouse.isButtonDown(1);
+        rightMouseButtonDown = Mouse.isButtonDown(0);
 
         // Keyboard Input
         while (Keyboard.next()) {
@@ -97,12 +101,39 @@ public class Player {
                 Clock.changeMultiplier(-0.2f);
             }
         }
+        if (waveManager.getCurrentWave().isCompleted()) cleanProjectiles();
     }
 
-    private boolean isPlaceFree(int mouseX, int mouseY) {
+    private void placeTower() {
+        if (holdingTower)
+            if (modifyCash(-tempTower.getCost()))
+                towerList.add(tempTower);
+        holdingTower = false;
+        tempTower = null;
+    }
+
+    public void pickTower(Tower t) {
+        tempTower = t;
+        holdingTower = true;
+    }
+
+    private Tile getMouseTile() {
+        return grid.getTile(Mouse.getX() / TILE_SIZE, (HEIGHT - Mouse.getY() - 1) / TILE_SIZE);
+    }
+
+    private boolean isPlaceFree(Tile mouseTile) {
         for (Tower t : towerList) {
-            if (t.getX() / TILE_SIZE == mouseX && t.getY() / TILE_SIZE == mouseY) return false;
+            if (t.getX() / TILE_SIZE == mouseTile.getX() / TILE_SIZE && t.getY() / TILE_SIZE == mouseTile.getY() / TILE_SIZE)
+                return false;
         }
         return true;
+    }
+
+    public ArrayList<Tower> getTowerList() {
+        return towerList;
+    }
+
+    public void cleanProjectiles() {
+        for (Tower t : getTowerList()) t.projectiles.clear();
     }
 }

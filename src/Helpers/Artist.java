@@ -16,7 +16,7 @@ import static org.lwjgl.opengl.GL11.*;
  * Created by shurik on 28.04.2017.
  */
 public class Artist {
-    public static final int WIDTH = 1280, HEIGHT = 960, TILE_SIZE = 64;
+    public static final int WIDTH = 1472, HEIGHT = 960, TILE_SIZE = 64;
 
     public static void BeginSession() {
         Display.setTitle("Uncrackable Defence");
@@ -40,7 +40,8 @@ public class Artist {
     public static boolean checkCollision(float x1, float y1, float width1, float height1,
                                          float x2, float y2, float width2, float height2) {
 
-        return x1 + width1 > x2 && x1 < x2 + width2 && y1 + height1 > y2 && y1 < y2 + height2;
+        return x1 + width1 - TILE_SIZE / 4 > x2 && x1 < x2 + width2 - TILE_SIZE / 4 &&
+                y1 + height1 - TILE_SIZE / 4 > y2 && y1 < y2 + height2 - TILE_SIZE / 4;
     }
 
     public static void drawQuadTexture(Texture tex, float x, float y, float width, float height) {

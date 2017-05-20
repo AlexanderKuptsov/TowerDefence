@@ -56,7 +56,7 @@ public class Editor {
                 (int) Math.floor((HEIGHT - Mouse.getY() - 1) / TILE_SIZE), types[index]);
     }
 
-
+    // change TileType
     private void moveIndex() {
         index++;
         if (index > types.length - 1) {

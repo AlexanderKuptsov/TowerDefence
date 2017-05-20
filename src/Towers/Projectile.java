@@ -13,8 +13,8 @@ import static Helpers.Artist.*;
 public abstract class Projectile implements Entity {
 
     private Texture texture;
-    private float x, y, speed, xVelocity, yVelocity;
-    private int damage, width, height;
+    private float x, y, speed, damage, xVelocity, yVelocity;
+    private int width, height;
     private Enemy target;
     private boolean alive;
 
@@ -71,7 +71,7 @@ public abstract class Projectile implements Entity {
     }
 
     public void draw() {
-        drawQuadTextureRotation(texture, x, y, 32, 32, calculateAngle());
+        drawQuadTextureRotation(texture, x, y, width, height, calculateAngle());
     }
 
     public float getX() {

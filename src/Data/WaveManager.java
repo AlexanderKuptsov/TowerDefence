@@ -1,5 +1,9 @@
 package Data;
 
+import Main.Game;
+
+import static Data.Player.modifyCash;
+
 /**
  * Created by shurik on 02.05.2017.
  */
@@ -23,16 +27,31 @@ public class WaveManager {
 
     public void update() {
         if (!currentWave.isCompleted()) currentWave.update();
-        else newWave();
+        else {
+            enemiesPerWave++;
+            enemyType.setHealth(enemyType.getHealth() * 1.2f);
+            modifyCash(5 * waveNumber);
+            newWave();
+        }
     }
 
     private void newWave() {
+        if (waveNumber != 0) currentWave.getEnemies().clear();
         currentWave = new Wave(enemyType, timeBetweenEnemies, enemiesPerWave);
         waveNumber++;
         System.out.println("Wave " + waveNumber);
     }
 
+    public void restartEnemies() {
+        currentWave.getEnemies().clear();
+        waveNumber = 0;
+    }
+
     public Wave getCurrentWave() {
         return currentWave;
+    }
+
+    public int getWaveNumber() {
+        return waveNumber;
     }
 }

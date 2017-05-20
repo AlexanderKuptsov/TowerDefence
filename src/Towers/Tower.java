@@ -10,8 +10,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import static Helpers.Artist.drawQuadTexture;
 import static Helpers.Artist.drawQuadTextureRotation;
-import static Helpers.Artist.quickLoad;
-import static Helpers.Artist.TILE_SIZE;
+
 import static Helpers.Clock.delta;
 
 /**
@@ -19,8 +18,8 @@ import static Helpers.Clock.delta;
  */
 public abstract class Tower implements Entity {
 
-    private float x, y, timeSinceLastShot, firingRate, angle;
-    private int width, height, damage, range;
+    private float x, y, timeSinceLastShot, range, firingRate, angle;
+    private int width, height, cost;
     private CopyOnWriteArrayList<Enemy> enemies;
     private boolean targeted;
     public Enemy target;
@@ -35,7 +34,7 @@ public abstract class Tower implements Entity {
         this.y = startTile.getY();
         this.width = startTile.getWidth();
         this.height = startTile.getHeight();
-        this.damage = type.damage;
+        this.cost = type.cost;
         this.range = type.range;
         this.firingRate = type.firingRate;
         this.targeted = false;
@@ -144,5 +143,9 @@ public abstract class Tower implements Entity {
 
     public Enemy getTarget() {
         return target;
+    }
+
+    public int getCost() {
+        return cost;
     }
 }

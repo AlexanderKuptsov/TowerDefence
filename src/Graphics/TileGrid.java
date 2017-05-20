@@ -14,9 +14,9 @@ public class TileGrid {
     private int tileWide, tileHigh;
 
     public TileGrid() { // всё поле в траве
-        this.tileWide = WIDTH / TILE_SIZE;
+        this.tileWide = (WIDTH - 192) / TILE_SIZE;
         this.tileHigh = HEIGHT / TILE_SIZE;
-        map = new Tile[Artist.WIDTH / TILE_SIZE][Artist.HEIGHT / TILE_SIZE];
+        map = new Tile[(Artist.WIDTH - 192) / TILE_SIZE][Artist.HEIGHT / TILE_SIZE];
         for (int i = 0; i < map.length; i++) {
             for (int j = 0; j < map[i].length; j++) {
                 map[i][j] = new Tile(i * TILE_SIZE, j * TILE_SIZE, TILE_SIZE, TILE_SIZE, TileType.Grass);

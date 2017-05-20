@@ -1,5 +1,6 @@
 package Helpers;
 
+import Data.Player;
 import Main.Editor;
 import Main.Game;
 import Main.MainMenu;
@@ -18,24 +19,6 @@ public class StateManager {
     public static Game game;
     public static Editor editor;
 
-    static int[][] map = {
-            {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
-            {0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0},
-            {0, 0, 0, 1, 2, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 5, 5, 0, 0, 0},
-            {0, 0, 0, 1, 1, 2, 1, 0, 0, 0, 0, 0, 0, 0, 0, 5, 5, 5, 0, 0},
-            {0, 0, 0, 4, 1, 2, 1, 0, 0, 4, 4, 0, 1, 1, 1, 1, 1, 1, 1, 0},
-            {1, 1, 1, 4, 1, 2, 1, 1, 2, 2, 2, 2, 1, 0, 4, 0, 5, 0, 1, 0},
-            {2, 2, 1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 0, 0, 0, 5, 0, 1, 0},
-            {2, 2, 2, 2, 2, 2, 2, 0, 5, 0, 0, 0, 0, 0, 0, 5, 5, 0, 1, 0},
-            {0, 5, 5, 0, 0, 0, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 1, 0},
-            {0, 0, 5, 5, 5, 0, 0, 5, 5, 5, 0, 0, 5, 5, 5, 5, 0, 1, 1, 0},
-            {2, 2, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 5, 5, 5, 0, 1, 1, 0, 5},
-            {2, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 1, 1, 0, 5, 5},
-            {0, 0, 0, 2, 2, 2, 2, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 5, 5, 5},
-            {0, 0, 0, 0, 0, 2, 2, 2, 2, 0, 0, 1, 0, 0, 0, 0, 5, 5, 5, 5},
-            {0, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 1, 0, 0, 0, 5, 5, 5, 5, 5},
-    };
-
     public static void update() {
         switch (gameState) {
             case MAINMENU:
@@ -43,7 +26,7 @@ public class StateManager {
                 mainMenu.update();
                 break;
             case GAME:
-                if (game == null) game = new Game(map);
+                if (game == null) game = new Game("newMarvelousMap1");
                 game.update();
 
                 break;
