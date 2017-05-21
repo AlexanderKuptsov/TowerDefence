@@ -39,7 +39,6 @@ public class WaveManager {
         if (waveNumber != 0) currentWave.getEnemies().clear();
         currentWave = new Wave(enemyType, timeBetweenEnemies, enemiesPerWave);
         waveNumber++;
-        System.out.println("Wave " + waveNumber);
     }
 
     public void restartEnemies() {

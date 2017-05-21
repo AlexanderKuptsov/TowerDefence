@@ -181,6 +181,8 @@ public class Enemy implements Entity {
 
     private void die() {
         alive = false;
+        checkpoints.clear();
+        directions = null;
     }
 
     public void draw() {

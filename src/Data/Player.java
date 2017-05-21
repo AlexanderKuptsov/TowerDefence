@@ -50,14 +50,11 @@ public class Player {
     public static void setup() {
         Cash = 75;
         Lives = 5;
-        System.out.println("$" + Cash);
-        System.out.println("Lives: " + Lives);
     }
 
     public static boolean modifyCash(int amount) {
         if (Cash + amount >= 0) {
             Cash += amount;
-            System.out.println("$" + Cash);
             return true;
         }
         return false;
@@ -65,7 +62,6 @@ public class Player {
 
     public static void modifyLives(int amount) {
         Lives += amount;
-        System.out.println("Lives: " + Lives);
     }
 
     public void update() {
@@ -99,6 +95,9 @@ public class Player {
             }
             if (Keyboard.getEventKey() == Keyboard.KEY_LEFT && Keyboard.getEventKeyState()) {
                 Clock.changeMultiplier(-0.2f);
+            }
+            if (Keyboard.getEventKey() == Keyboard.KEY_M  && Keyboard.getEventKeyState()) {
+                Cash += 5;
             }
         }
         if (waveManager.getCurrentWave().isCompleted()) cleanProjectiles();

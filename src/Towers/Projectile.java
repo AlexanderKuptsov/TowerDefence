@@ -110,6 +110,10 @@ public abstract class Projectile implements Entity {
         return target;
     }
 
+    public boolean isAlive() {
+        return alive;
+    }
+
     public void setAlive(boolean status) {
         alive = status;
     }

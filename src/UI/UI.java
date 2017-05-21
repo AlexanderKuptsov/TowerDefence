@@ -1,7 +1,9 @@
 package UI;
 
 import org.lwjgl.input.Mouse;
+import org.newdawn.slick.TrueTypeFont;
 
+import java.awt.*;
 import java.util.ArrayList;
 
 import static Helpers.Artist.*;
@@ -13,10 +15,18 @@ public class UI {
 
     private ArrayList<Button> buttonList;
     private ArrayList<Menu> menuList;
+    private TrueTypeFont font;
+    private Font awtFont;
 
     public UI() {
         buttonList = new ArrayList<Button>();
         menuList = new ArrayList<Menu>();
+        awtFont = new Font("Algerian", Font.ITALIC, 22);
+        font = new TrueTypeFont(awtFont, false);
+    }
+
+    public void drawString(int x, int y, String text) {
+        font.drawString(x, y, text);
     }
 
     public void addButton(String name, String textureName, int x, int y, int width, int height) {
@@ -75,7 +85,7 @@ public class UI {
 
         public void addButton(Button b) {
             if (optionsWidth != 0)
-                b.setY(y + (numberOfButtons / optionsWidth) * (TILE_SIZE + gap) + gap);
+                b.setY(y + (numberOfButtons / optionsWidth) * (TILE_SIZE + gap) + gap + 70);
             b.setX(x + (numberOfButtons % 2) * (gap + TILE_SIZE) + gap);
             numberOfButtons++;
             menuButtons.add(b);

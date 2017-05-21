@@ -42,7 +42,7 @@ public class Clock {
     }
 
     public static void changeMultiplier(float change) {
-        if (!(multiplier + change < -1 && multiplier + change > 6)) {
+        if (!(multiplier + change < -1 && multiplier + change > 5)) {
             multiplier += change;
         }
     }

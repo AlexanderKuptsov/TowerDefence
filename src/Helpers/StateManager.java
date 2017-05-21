@@ -19,6 +19,10 @@ public class StateManager {
     public static Game game;
     public static Editor editor;
 
+    public static long nextSecond = System.currentTimeMillis() + 1000;
+    public static int framesInLastSecond = 0;
+    public static int framesInCurrentSecond = 0;
+
     public static void update() {
         switch (gameState) {
             case MAINMENU:
@@ -35,6 +39,16 @@ public class StateManager {
                 editor.update();
                 break;
         }
+
+        long currentTime = System.currentTimeMillis();
+        if (currentTime > nextSecond) {
+            nextSecond += 1000;
+            framesInLastSecond = framesInCurrentSecond;
+            framesInCurrentSecond = 0;
+        }
+        framesInCurrentSecond++;
+
+
     }
 
     public static void setState(GameState newState) {

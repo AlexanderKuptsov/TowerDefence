@@ -11,6 +11,7 @@ import Towers.TowerIce;
 import Towers.TowerType;
 import UI.*;
 import org.lwjgl.input.Mouse;
+import org.newdawn.slick.opengl.Texture;
 
 import static Data.Player.Lives;
 import static Data.Player.setup;
@@ -25,7 +26,8 @@ public class Game {
     private TileGrid grid;
     private Player player;
     private WaveManager waveManager;
-    private UI towerPickerUI;
+    private UI gameUI;
+    private Texture menuBackground;
 
     public Game(String map) {
         //grid = new TileGrid(map);
@@ -35,36 +37,46 @@ public class Game {
                 grid.getTile(0, 5), grid, TILE_SIZE, TILE_SIZE, 55, 80), 3, 6);
         player = new Player(grid, waveManager);
         player.setup();
+        this.menuBackground = quickLoad("menuBackground2");
         setupUI();
     }
 
     private void setupUI() {
-        towerPickerUI = new UI();
-        towerPickerUI.createMenu("TowerPicker", 1280, 0, 192, 960, 2, 0);
+        gameUI = new UI();
+        gameUI.createMenu("TowerPicker", 1280, 0, 192, 960, 2, 0);
 
-        towerPickerUI.getMenu("TowerPicker").addButton(
+        gameUI.getMenu("TowerPicker").addButton(
                 new Button("TowerIce", quickLoad("Towers/towerIceFull"), 0, 0, TILE_SIZE, TILE_SIZE));
-        towerPickerUI.getMenu("TowerPicker").addButton(
+        gameUI.getMenu("TowerPicker").addButton(
                 new Button("FlameThrower", quickLoad("Towers/flameThrowerFull"), 0, 0, TILE_SIZE, TILE_SIZE));
-        towerPickerUI.getMenu("TowerPicker").addButton(
+        gameUI.getMenu("TowerPicker").addButton(
                 new Button("TowerCannonPurple", quickLoad("Towers/towerPurpleFull"), 0, 0, TILE_SIZE, TILE_SIZE));
+
+        gameUI.addButton("Quit", "quit", 1334, 825, 80, 80);
     }
 
     private void updateUI() {
-        towerPickerUI.draw();
+        gameUI.draw();
+        gameUI.drawString(1310, 625, "Lives: " + Player.Lives);
+        gameUI.drawString(1310, 675, "Cash: " + Player.Cash);
+        gameUI.drawString(1310, 725, "Wave: " + waveManager.getWaveNumber());
+        gameUI.drawString(1310, 775, StateManager.framesInLastSecond + " fps");
 
         if (Mouse.next()) {
             boolean mouseClicked = Mouse.isButtonDown(0);
             if (mouseClicked) {
-                if (towerPickerUI.getMenu("TowerPicker").isButtonClicked("TowerIce"))
+                if (gameUI.getMenu("TowerPicker").isButtonClicked("TowerIce"))
                     player.pickTower(new TowerIce(TowerType.CannonIce, grid.getTile(0, 0),
                             waveManager.getCurrentWave().getEnemies()));
-                if (towerPickerUI.getMenu("TowerPicker").isButtonClicked("FlameThrower"))
+                if (gameUI.getMenu("TowerPicker").isButtonClicked("FlameThrower"))
                     player.pickTower(new TowerFlameThrower(TowerType.FlameThrower, grid.getTile(0,
                             0), waveManager.getCurrentWave().getEnemies()));
-                if (towerPickerUI.getMenu("TowerPicker").isButtonClicked("TowerCannonPurple"))
+                if (gameUI.getMenu("TowerPicker").isButtonClicked("TowerCannonPurple"))
                     player.pickTower(new TowerCannon(TowerType.CannonPurple, grid.getTile(0, 0),
                             waveManager.getCurrentWave().getEnemies()));
+
+                if (gameUI.isButtonClicked("Quit"))
+                    System.exit(0);
             }
         }
     }
@@ -80,13 +92,13 @@ public class Game {
 
 
     public void update() {
-        drawQuadTexture(quickLoad("menuBackground"), 1280, 0, 192, 960);
+        drawQuadTexture(menuBackground, 1280, 0, 192, 960);
         grid.draw();
         waveManager.update();
         player.update();
         updateUI();
 
-        if (waveManager.getWaveNumber() >= 3) {
+        if (waveManager.getWaveNumber() > 3) {
             System.out.println("Congratulations! You win!");
             Restart();
         }

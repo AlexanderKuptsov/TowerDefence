@@ -97,7 +97,7 @@ public abstract class Tower implements Entity {
         timeSinceLastShot += delta();
 
         for (Projectile p : projectiles) p.update();
-
+        if (target != null && !target.isAlive()) projectiles.clear();
         draw();
     }
 
