@@ -10,6 +10,8 @@ import org.newdawn.slick.util.ResourceLoader;
 import java.io.IOException;
 import java.io.InputStream;
 
+import static Main.Game.Cash;
+import static Main.Game.Lives;
 import static org.lwjgl.opengl.GL11.*;
 
 /**
@@ -42,6 +44,18 @@ public class Artist {
 
         return x1 + width1 - TILE_SIZE / 4 > x2 && x1 < x2 + width2 - TILE_SIZE / 4 &&
                 y1 + height1 - TILE_SIZE / 4 > y2 && y1 < y2 + height2 - TILE_SIZE / 4;
+    }
+
+    public static boolean modifyCash(int amount) {
+        if (Cash + amount >= 0) {
+            Cash += amount;
+            return true;
+        }
+        return false;
+    }
+
+    public static void modifyLives(int amount) {
+        Lives += amount;
     }
 
     public static void drawQuadTexture(Texture tex, float x, float y, float width, float height) {

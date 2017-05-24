@@ -17,9 +17,16 @@ public class MainMenu {
     public MainMenu() {
         background = quickLoad("mainmenu");
         menuUI = new UI();
-        menuUI.addButton("Play", "play", WIDTH / 2 - 128, (int) (HEIGHT * 0.05f), 256, 256);
-        menuUI.addButton("Editor", "editor", WIDTH / 2 - 128, (int) (HEIGHT * 0.35f), 256, 256);
-        menuUI.addButton("Quit", "quit", WIDTH / 2 - 128, (int) (HEIGHT * 0.65f), 256, 256);
+        int BUTTON_SIZE = 256;
+        menuUI.addButton("Play", "play", WIDTH / 2 - BUTTON_SIZE / 2, (int) (HEIGHT * 0.05f),
+                BUTTON_SIZE, BUTTON_SIZE);
+        menuUI.addButton("Editor", "editor", WIDTH / 2 - BUTTON_SIZE / 2, (int) (HEIGHT * 0.35f),
+                BUTTON_SIZE, BUTTON_SIZE);
+        menuUI.addButton("Quit", "quit", WIDTH / 2 - BUTTON_SIZE / 2, (int) (HEIGHT * 0.65f),
+                BUTTON_SIZE, BUTTON_SIZE);
+
+        menuUI.addButton("Levels", "Levels", WIDTH / 2 + BUTTON_SIZE, (int) (HEIGHT * 0.05f),
+                BUTTON_SIZE, BUTTON_SIZE);
     }
 
     private void updateButtons() {
@@ -29,6 +36,8 @@ public class MainMenu {
             StateManager.setState(StateManager.GameState.EDITOR);
         if (menuUI.isButtonClicked("Quit"))
             System.exit(0);
+        if (menuUI.isButtonClicked("Levels"))
+            StateManager.setState(StateManager.GameState.LEVELMENU);
     }
 
     public void update() {

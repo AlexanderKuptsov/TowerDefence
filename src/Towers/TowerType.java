@@ -33,4 +33,8 @@ public enum TowerType {
         this.firingRate = firingRate;
         this.cost = cost;
     }
+
+    public int getCost() {
+        return cost;
+    }
 }

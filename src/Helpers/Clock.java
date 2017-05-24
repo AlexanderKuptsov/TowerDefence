@@ -8,10 +8,10 @@ import org.lwjgl.Sys;
 public class Clock {
 
     private static boolean paused = false;
-    public static long lastFrame, totalTime;
-    public static float deltaTime = 0, multiplier = 1;
+    private static long lastFrame, totalTime;
+    private static float deltaTime = 0, multiplier = 1;
 
-    public static long getTime() {
+    private static long getTime() {
         return Sys.getTime() * 1000 / Sys.getTimerResolution();
     }
 
@@ -19,7 +19,8 @@ public class Clock {
         long currentTime = getTime();
         int delta = (int) (currentTime - lastFrame);
         lastFrame = getTime();
-        if (delta * 0.001f > 0.05f) return 0.05f;
+        float maxDelay = 0.05f;
+        if (delta * 0.001f > maxDelay) return maxDelay;
         return delta * 0.001f;
     }
 
@@ -42,7 +43,9 @@ public class Clock {
     }
 
     public static void changeMultiplier(float change) {
-        if (!(multiplier + change < -1 && multiplier + change > 5)) {
+        short minMulti = -1;
+        short maxMulti = 5;
+        if (!(multiplier + change < minMulti && multiplier + change > maxMulti)) {
             multiplier += change;
         }
     }

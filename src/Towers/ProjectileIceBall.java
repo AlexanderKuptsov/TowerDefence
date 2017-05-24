@@ -25,7 +25,7 @@ public class ProjectileIceBall extends Projectile {
         super.damage();
         if (slowDuration > 0) super.getTarget().setSpeed(getTarget().getStartSpeed() * slowEffect);
         else super.getTarget().setSpeed(getTarget().getStartSpeed());
-       // slowDuration=2.5f;
+        slowDuration=2.5f;
     }
 
     @Override

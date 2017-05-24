@@ -2,16 +2,15 @@ package Data;
 
 import Graphics.Tile;
 import Graphics.TileGrid;
-import Graphics.TileType;
 import Helpers.Clock;
-import Main.Boot;
-import Towers.*;
+import Towers.Tower;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 import java.util.ArrayList;
 
 import static Helpers.Artist.*;
+import static Main.Game.Cash;
 
 /**
  * Created by shurik on 29.04.2017.
@@ -19,49 +18,20 @@ import static Helpers.Artist.*;
 public class Player {
 
     private TileGrid grid;
-    private TileType[] types;
-    private ArrayList<Enemy> enemies;
     private WaveManager waveManager;
     private ArrayList<Tower> towerList;
     private boolean leftMouseButtonDown, rightMouseButtonDown, holdingTower;
     private Tower tempTower;
 
-    public static int Cash, Lives;
 
     public Player(TileGrid grid, WaveManager waveManager) {
         this.grid = grid;
-        this.types = new TileType[6];
-        this.types[0] = TileType.Grass;
-        this.types[1] = TileType.Dirt;
-        this.types[2] = TileType.Water;
-        this.types[3] = TileType.Sand;
-        this.types[4] = TileType.Bush;
-        this.types[5] = TileType.Stones;
         this.waveManager = waveManager;
         this.towerList = new ArrayList<Tower>();
         this.leftMouseButtonDown = true;
         this.rightMouseButtonDown = false;
         this.holdingTower = false;
         this.tempTower = null;
-        Cash = 0;
-        Lives = 0;
-    }
-
-    public static void setup() {
-        Cash = 75;
-        Lives = 5;
-    }
-
-    public static boolean modifyCash(int amount) {
-        if (Cash + amount >= 0) {
-            Cash += amount;
-            return true;
-        }
-        return false;
-    }
-
-    public static void modifyLives(int amount) {
-        Lives += amount;
     }
 
     public void update() {
@@ -96,7 +66,7 @@ public class Player {
             if (Keyboard.getEventKey() == Keyboard.KEY_LEFT && Keyboard.getEventKeyState()) {
                 Clock.changeMultiplier(-0.2f);
             }
-            if (Keyboard.getEventKey() == Keyboard.KEY_M  && Keyboard.getEventKeyState()) {
+            if (Keyboard.getEventKey() == Keyboard.KEY_M && Keyboard.getEventKeyState()) {
                 Cash += 5;
             }
         }
@@ -122,7 +92,8 @@ public class Player {
 
     private boolean isPlaceFree(Tile mouseTile) {
         for (Tower t : towerList) {
-            if (t.getX() / TILE_SIZE == mouseTile.getX() / TILE_SIZE && t.getY() / TILE_SIZE == mouseTile.getY() / TILE_SIZE)
+            if (t.getX() / TILE_SIZE == mouseTile.getX() / TILE_SIZE &&
+                    t.getY() / TILE_SIZE == mouseTile.getY() / TILE_SIZE)
                 return false;
         }
         return true;

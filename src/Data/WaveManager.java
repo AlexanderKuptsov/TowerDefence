@@ -1,8 +1,6 @@
 package Data;
 
-import Main.Game;
-
-import static Data.Player.modifyCash;
+import static Helpers.Artist.modifyCash;
 
 /**
  * Created by shurik on 02.05.2017.
@@ -39,6 +37,7 @@ public class WaveManager {
         if (waveNumber != 0) currentWave.getEnemies().clear();
         currentWave = new Wave(enemyType, timeBetweenEnemies, enemiesPerWave);
         waveNumber++;
+        System.out.println("Wave " + waveNumber);
     }
 
     public void restartEnemies() {

@@ -13,7 +13,7 @@ import static Helpers.Clock.*;
  * Created by shurik on 29.04.2017.
  */
 public class Enemy implements Entity {
-    private int width, height, currentCheckpoint;
+    private int width, height, currentCheckpoint, earnings;
     private float x, y, speed, startSpeed, startHealth, health;
     private Texture texture, healthBackGround, healthForeGround, healthBorder;
     private Tile startTile;
@@ -21,8 +21,50 @@ public class Enemy implements Entity {
     private TileGrid grid;
     private int angle;
 
+    private Texture enemyRight;
+    private Texture enemyLeft;
+    private Texture enemyUp;
+    private Texture enemyDown;
+
     private ArrayList<Checkpoint> checkpoints;
     private int[] directions;
+
+    private short healthLabelHeight = 8;
+
+    public Enemy(int tileX, int tileY, TileGrid grid) {
+        this.texture = quickLoad("tankNavy");
+        this.healthBackGround = quickLoad("healthBackGround");
+        this.healthForeGround = quickLoad("healthForeGround");
+        this.healthBorder = quickLoad("healthBorder");
+        this.startTile = grid.getTile(tileX, tileY);
+        this.x = startTile.getX();
+        this.y = startTile.getY();
+        this.width = TILE_SIZE;
+        this.height = TILE_SIZE;
+        this.speed = 55;
+        this.startSpeed = speed;
+        this.health = 80;
+        this.startHealth = health;
+        this.grid = grid;
+        this.first = true;
+        this.alive = true;
+        this.angle = 180;
+        this.earnings = 5;
+
+        this.enemyRight = quickLoad("tankNavy");
+        this.enemyLeft = quickLoad("tankNavyLEFT");
+        this.enemyUp = quickLoad("tankNavyUP");
+        this.enemyDown = quickLoad("tankNavyDOWN");
+
+        this.checkpoints = new ArrayList<Checkpoint>();
+        this.directions = new int[2];
+
+        this.directions[0] = 0; // x direction
+        this.directions[1] = 0; // y direction
+        directions = findNextDirection(startTile);
+        this.currentCheckpoint = 0;
+        populateCheckpointList();
+    }
 
     public Enemy(Texture texture, Tile startTile, TileGrid grid, int width, int height, float speed, float health) {
         this.texture = texture;
@@ -42,6 +84,12 @@ public class Enemy implements Entity {
         this.first = true;
         this.alive = true;
         this.angle = 180;
+        this.earnings = 5;
+
+        this.enemyRight = quickLoad("tankNavy");
+        this.enemyLeft = quickLoad("tankNavyLEFT");
+        this.enemyUp = quickLoad("tankNavyUP");
+        this.enemyDown = quickLoad("tankNavyDOWN");
 
         this.checkpoints = new ArrayList<Checkpoint>();
         this.directions = new int[2];
@@ -59,23 +107,21 @@ public class Enemy implements Entity {
         } else {
             if (checkpointReached()) {
                 if (currentCheckpoint == checkpoints.size() - 1)
-                    /*if (grid.getTile((int) getX() / TILE_SIZE + checkpoints.get(currentCheckpoint).getXDirection()
-                            , (int) getY() / TILE_SIZE + checkpoints.get(currentCheckpoint).getYDirection()).getType() ==
-                            TileType.Water)*/ endOfMazeReached();
+                    endOfMazeReached();
                 else currentCheckpoint++;
             } else {
 
                 if (checkpoints.get(currentCheckpoint).getXDirection() == 1) {
-                    texture = quickLoad("tankNavy");
+                    texture = enemyRight;
                     angle = 180;
                 } else if (checkpoints.get(currentCheckpoint).getXDirection() == -1) {
-                    texture = quickLoad("tankNavyLEFT");
+                    texture = enemyLeft;
                     angle = 180;
                 } else if (checkpoints.get(currentCheckpoint).getYDirection() == -1) {
-                    texture = quickLoad("tankNavyUP");
+                    texture = enemyUp;
                     angle = 90;
                 } else if (checkpoints.get(currentCheckpoint).getYDirection() == 1) {
-                    texture = quickLoad("tankNavyDOWN");
+                    texture = enemyDown;
                     angle = -90;
                 }
 
@@ -87,14 +133,15 @@ public class Enemy implements Entity {
 
     private void endOfMazeReached() {
         die();
-        Player.modifyLives(-1);
+        modifyLives(-1);
     }
 
     private boolean checkpointReached() {
         boolean reached = false;
         Tile t = checkpoints.get(currentCheckpoint).getTile();
         // проверка заранее (не доходя немного)
-        if (x > t.getX() - 3 && x < t.getX() + 3 && y > t.getY() - 3 && y < t.getY() + 3) {
+        final short preGap = 3;
+        if (x > t.getX() - preGap && x < t.getX() + preGap && y > t.getY() - preGap && y < t.getY() + preGap) {
             reached = true;
             x = t.getX();
             y = t.getY();
@@ -110,8 +157,9 @@ public class Enemy implements Entity {
         boolean cont = true; // continue
         while (cont) {
             int[] currentDirection = findNextDirection(checkpoints.get(counter).getTile());
-
-            if (currentDirection[0] == 2 || counter == 20) { // проверка на существование нового направления/checkpoint
+            final short noDirection = 2;
+            final short maxAttempts = 20;
+            if (currentDirection[0] == noDirection || counter == maxAttempts) { // проверка на существование нового направления/checkpoint
                 cont = false;
             } else {
                 directions = findNextDirection(checkpoints.get(counter).getTile());
@@ -175,7 +223,7 @@ public class Enemy implements Entity {
         health -= amountOfDamage;
         if (health <= 0) {
             die();
-            Player.modifyCash(5);
+            modifyCash(earnings);
         }
     }
 
@@ -188,14 +236,16 @@ public class Enemy implements Entity {
     public void draw() {
         float healthPercent = health / startHealth;
         drawQuadTexture(texture, x, y, width, height);
-        drawQuadTexture(healthBackGround, x, y - TILE_SIZE / 4, width, 8);
-        drawQuadTexture(healthForeGround, x, y - TILE_SIZE / 4, TILE_SIZE * healthPercent, 8);
-        drawQuadTexture(healthBorder, x, y - TILE_SIZE / 4, width, 8);
-        if (healthPercent < 0.3) {
-            int deltaPos = 0;
-            if (angle == 90 || angle == -90) deltaPos = 16;
-            drawQuadTextureRotation(quickLoad("fire"), x + TILE_SIZE / 2 - 48, y + TILE_SIZE / 2 - 64 + deltaPos,
-                    96, 96, angle);
+        drawQuadTexture(healthBackGround, x, y - TILE_SIZE / 4, width, healthLabelHeight);
+        drawQuadTexture(healthForeGround, x, y - TILE_SIZE / 4, TILE_SIZE * healthPercent, healthLabelHeight);
+        drawQuadTexture(healthBorder, x, y - TILE_SIZE / 4, width, healthLabelHeight);
+        final float lowHealth = 0.3f;
+        if (healthPercent < lowHealth) {
+            short deltaYPos = 0;
+            final short deltaXPos = (TILE_SIZE * 3) / 4;
+            if (angle == 90 || angle == -90) deltaYPos = 16;
+            drawQuadTextureRotation(quickLoad("fire"),
+                    x + TILE_SIZE / 2 - deltaXPos, y - TILE_SIZE / 2 + deltaYPos, 96, 96, angle);
         }
     }
 
@@ -281,5 +331,21 @@ public class Enemy implements Entity {
 
     public boolean isAlive() {
         return alive;
+    }
+
+    public void setEnemyRight(Texture enemyRight) {
+        this.enemyRight = enemyRight;
+    }
+
+    public void setEnemyLeft(Texture enemyLeft) {
+        this.enemyLeft = enemyLeft;
+    }
+
+    public void setEnemyUp(Texture enemyUp) {
+        this.enemyUp = enemyUp;
+    }
+
+    public void setEnemyDown(Texture enemyDown) {
+        this.enemyDown = enemyDown;
     }
 }

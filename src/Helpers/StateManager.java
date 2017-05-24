@@ -3,6 +3,7 @@ package Helpers;
 import Data.Player;
 import Main.Editor;
 import Main.Game;
+import Main.LevelMenu;
 import Main.MainMenu;
 
 /**
@@ -11,17 +12,20 @@ import Main.MainMenu;
 public class StateManager {
 
     public static enum GameState {
-        MAINMENU, GAME, EDITOR;
+        MAINMENU, GAME, EDITOR, LEVELMENU;
     }
 
-    public static GameState gameState = GameState.MAINMENU;
-    public static MainMenu mainMenu;
-    public static Game game;
-    public static Editor editor;
+    private static GameState gameState = GameState.MAINMENU;
+    private static MainMenu mainMenu;
+    private static Game game;
+    private static Editor editor;
+    private static LevelMenu levelMenu;
 
-    public static long nextSecond = System.currentTimeMillis() + 1000;
+    private static long nextSecond = System.currentTimeMillis() + 1000;
     public static int framesInLastSecond = 0;
-    public static int framesInCurrentSecond = 0;
+    private static int framesInCurrentSecond = 0;
+
+    private static String mapName = "newMarvelousMap1";
 
     public static void update() {
         switch (gameState) {
@@ -30,14 +34,16 @@ public class StateManager {
                 mainMenu.update();
                 break;
             case GAME:
-                if (game == null) game = new Game("newMarvelousMap1");
+                if (game == null) game = new Game(mapName);
                 game.update();
-
                 break;
             case EDITOR:
                 if (editor == null) editor = new Editor();
                 editor.update();
                 break;
+            case LEVELMENU:
+                if (levelMenu == null) levelMenu = new LevelMenu();
+                levelMenu.update();
         }
 
         long currentTime = System.currentTimeMillis();
@@ -47,11 +53,13 @@ public class StateManager {
             framesInCurrentSecond = 0;
         }
         framesInCurrentSecond++;
-
-
     }
 
     public static void setState(GameState newState) {
         gameState = newState;
+    }
+
+    public static void setMapName(String mapName) {
+        StateManager.mapName = mapName;
     }
 }

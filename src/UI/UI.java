@@ -84,8 +84,9 @@ public class UI {
         }
 
         public void addButton(Button b) {
+            final int FIRST_GAP = 70;
             if (optionsWidth != 0)
-                b.setY(y + (numberOfButtons / optionsWidth) * (TILE_SIZE + gap) + gap + 70);
+                b.setY(y + (numberOfButtons / optionsWidth) * (TILE_SIZE + gap) + gap + FIRST_GAP);
             b.setX(x + (numberOfButtons % 2) * (gap + TILE_SIZE) + gap);
             numberOfButtons++;
             menuButtons.add(b);
@@ -98,7 +99,7 @@ public class UI {
                     mouseY > b.getY() && mouseY < b.getY() + b.getHeight() && Mouse.isButtonDown(0);
         }
 
-        private Button getButton(String name) {
+        public Button getButton(String name) {
             for (Button b : menuButtons) {
                 if (b.getName().equals(name)) {
                     return b;
