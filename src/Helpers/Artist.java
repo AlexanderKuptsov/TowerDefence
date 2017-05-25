@@ -18,13 +18,14 @@ import static org.lwjgl.opengl.GL11.*;
  * Created by shurik on 28.04.2017.
  */
 public class Artist {
-    public static final int WIDTH = 1472, HEIGHT = 960, TILE_SIZE = 64;
+    public static int WIDTH = 1472, HEIGHT = 960, TILE_SIZE = 64;
 
     public static void BeginSession() {
         Display.setTitle("Uncrackable Defence");
         try {
             Display.setDisplayMode(new DisplayMode(WIDTH, HEIGHT));
             Display.create();
+            Display.setVSyncEnabled(true);
             Display.swapBuffers();
         } catch (LWJGLException e) {
             e.printStackTrace();

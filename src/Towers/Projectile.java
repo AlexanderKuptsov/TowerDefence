@@ -2,9 +2,9 @@ package Towers;
 
 import Data.Enemy;
 import Data.Entity;
+import Helpers.Clock;
 import org.newdawn.slick.opengl.Texture;
 
-import static Helpers.Clock.*;
 import static Helpers.Artist.*;
 
 /**
@@ -59,8 +59,8 @@ public abstract class Projectile implements Entity {
     public void update() {
         if (alive) {
             calculateDirection();
-            x += xVelocity * speed * delta();
-            y += yVelocity * speed * delta();
+            x += xVelocity * speed * Clock.INSTANCE.delta();
+            y += yVelocity * speed * Clock.INSTANCE.delta();
 
             if (checkCollision(x, y, width, height,
                     target.getX(), target.getY(), target.getWidth(), target.getHeight())) {

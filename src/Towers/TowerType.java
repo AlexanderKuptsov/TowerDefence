@@ -13,7 +13,7 @@ public enum TowerType {
             ProjectileType.Rocket, TILE_SIZE * 3, 0.3f, 0),
 
     CannonPurple(new Texture[]{quickLoad("Towers/towerBase"), quickLoad("Towers/towerPurpleGun")},
-            ProjectileType.Rocket, TILE_SIZE * 3.5f, 2, 15),
+            ProjectileType.Rocket, TILE_SIZE * 3.5f, 1.5f, 15),
 
     CannonIce(new Texture[]{quickLoad("Towers/cannonBaseBlue"), quickLoad("Towers/cannonGunBlue")},
             ProjectileType.IceBall, TILE_SIZE * 2.5f, 1.5f, 20),

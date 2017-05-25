@@ -8,6 +8,7 @@ import org.lwjgl.input.Mouse;
 
 import static Helpers.Artist.HEIGHT;
 import static Helpers.Artist.TILE_SIZE;
+import static Helpers.LevelManager.loadMap;
 import static Helpers.LevelManager.saveMap;
 
 /**

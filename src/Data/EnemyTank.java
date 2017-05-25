@@ -7,7 +7,7 @@ import Graphics.TileGrid;
  */
 public class EnemyTank extends Enemy {
 
-    public EnemyTank(int tileX, int tileY, TileGrid grid) {
-        super(tileX, tileY, grid);
+    public EnemyTank(EnemyType enemyType, int tileX, int tileY, TileGrid grid) {
+        super(enemyType, tileX, tileY, grid);
     }
 }

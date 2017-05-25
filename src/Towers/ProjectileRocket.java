@@ -1,7 +1,6 @@
 package Towers;
 
 import Data.Enemy;
-import org.newdawn.slick.opengl.Texture;
 
 /**
  * Created by shurik on 16.05.2017.

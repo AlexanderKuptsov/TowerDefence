@@ -3,6 +3,7 @@ package Towers;
 import Data.Enemy;
 import Data.Entity;
 import Graphics.Tile;
+import Helpers.Clock;
 import org.newdawn.slick.opengl.Texture;
 
 import java.util.ArrayList;
@@ -10,8 +11,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import static Helpers.Artist.drawQuadTexture;
 import static Helpers.Artist.drawQuadTextureRotation;
-
-import static Helpers.Clock.delta;
 
 /**
  * Created by shurik on 11.05.2017.
@@ -95,7 +94,7 @@ public abstract class Tower implements Entity {
 
         if (target == null || !target.isAlive() || !isInRange(target)) targeted = false;
 
-        timeSinceLastShot += delta();
+        timeSinceLastShot += Clock.INSTANCE.delta();
 
         for (Projectile p : projectiles) p.update();
         if (target != null && !target.isAlive()) projectiles.clear();

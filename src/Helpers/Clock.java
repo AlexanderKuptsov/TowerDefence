@@ -5,17 +5,18 @@ import org.lwjgl.Sys;
 /**
  * Created by shurik on 29.04.2017.
  */
-public class Clock {
+public enum Clock {
+    INSTANCE;
 
-    private static boolean paused = false;
-    private static long lastFrame, totalTime;
-    private static float deltaTime = 0, multiplier = 1;
+    private boolean paused = false;
+    private long lastFrame, totalTime;
+    private float deltaTime = 0, multiplier = 1;
 
-    private static long getTime() {
+    private long getTime() {
         return Sys.getTime() * 1000 / Sys.getTimerResolution();
     }
 
-    public static float getDelta() {
+    public float getDelta() {
         long currentTime = getTime();
         int delta = (int) (currentTime - lastFrame);
         lastFrame = getTime();
@@ -24,33 +25,33 @@ public class Clock {
         return delta * 0.001f;
     }
 
-    public static float delta() {
+    public float delta() {
         if (paused) return 0;
         else return deltaTime * multiplier;
     }
 
-    public static float totalTime() {
+    public float totalTime() {
         return totalTime;
     }
 
-    public static float multiplier() {
+    public float multiplier() {
         return multiplier;
     }
 
-    public static void update() {
+    public void update() {
         deltaTime = getDelta();
         totalTime += deltaTime;
     }
 
-    public static void changeMultiplier(float change) {
-        short minMulti = -1;
+    public void changeMultiplier(float change) {
+        short minMulti = 0;
         short maxMulti = 5;
         if (!(multiplier + change < minMulti && multiplier + change > maxMulti)) {
             multiplier += change;
         }
     }
 
-    private static void pause() {
+    private void pause() {
         paused = !paused;
     }
 }

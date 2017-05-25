@@ -10,9 +10,9 @@ import static Helpers.Artist.quickLoad;
  */
 public enum ProjectileType {
 
-    Rocket(quickLoad("missile"), 10, 500),
+    Rocket(quickLoad("missile"), 7.75f, 500),
     IceBall(quickLoad("bullet"), 2, 450),
-    Fire(quickLoad("fire"), 1f, 650);
+    Fire(quickLoad("fire"), 0.9f, 650);
 
     Texture texture;
     float damage, speed;

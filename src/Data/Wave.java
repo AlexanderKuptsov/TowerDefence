@@ -1,8 +1,10 @@
 package Data;
 
+import Helpers.Clock;
+
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import static Helpers.Clock.*;
+import static Helpers.Artist.TILE_SIZE;
 
 /**
  * Created by shurik on 29.04.2017.
@@ -10,19 +12,21 @@ import static Helpers.Clock.*;
 public class Wave {
 
     private float timeSinceLastSpawn, spawnTime;
-    private Enemy enemyType;
+    private Enemy[] enemyTypes;
     private CopyOnWriteArrayList<Enemy> enemyList;
     private int enemiesPerWave, enemiesSpawned;
     private boolean waveCompleted;
+    private int chosenEnemy;
 
-    public Wave(Enemy enemyType, float spawnTime, int enemiesPerWave) {
-        this.enemyType = enemyType;
+    public Wave(Enemy[] enemyTypes, float spawnTime, int enemiesPerWave) {
+        this.enemyTypes = enemyTypes;
         this.spawnTime = spawnTime;
         this.enemiesPerWave = enemiesPerWave;
         this.enemiesSpawned = 0;
         this.timeSinceLastSpawn = 0;
         this.enemyList = new CopyOnWriteArrayList<Enemy>();
         this.waveCompleted = false;
+        this.chosenEnemy = 0;
 
         spawn();
     }
@@ -30,7 +34,7 @@ public class Wave {
     public void update() {
         boolean allEnemiesDead = true;
         if (enemiesSpawned < enemiesPerWave) {
-            timeSinceLastSpawn += delta();
+            timeSinceLastSpawn += Clock.INSTANCE.delta();
             if (timeSinceLastSpawn > spawnTime) {
                 spawn();
                 timeSinceLastSpawn = 0;
@@ -50,8 +54,12 @@ public class Wave {
     }
 
     private void spawn() {
-        enemyList.add(new Enemy(enemyType.getTexture(), enemyType.getStartTile(), enemyType.getTileGrid(),
-                enemyType.getWidth(), enemyType.getHeight(), enemyType.getSpeed(), enemyType.getHealth()));
+        //  enemyList.add(new Enemy(enemyType.getTexture(), enemyType.getStartTile(), enemyType.getTileGrid(),
+        //          enemyType.getWidth(), enemyType.getHeight(), enemyType.getSpeed(), enemyType.getHealth()));
+        enemyList.add(new Enemy(enemyTypes[chosenEnemy].getEnemyType(), (int) (enemyTypes[chosenEnemy].getX() / TILE_SIZE),
+                (int) (enemyTypes[chosenEnemy].getY() / TILE_SIZE), enemyTypes[chosenEnemy].getGrid()));
+        chosenEnemy++;
+        if (chosenEnemy == 3) chosenEnemy = 0;
         enemiesSpawned++;
     }
 

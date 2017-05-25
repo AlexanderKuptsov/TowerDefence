@@ -9,32 +9,36 @@ import Main.MainMenu;
 /**
  * Created by shurik on 06.05.2017.
  */
-public class StateManager {
+public enum StateManager {
+    INSTANCE;
 
-    public static enum GameState {
+    public enum GameState {
         MAINMENU, GAME, EDITOR, LEVELMENU;
     }
 
-    private static GameState gameState = GameState.MAINMENU;
-    private static MainMenu mainMenu;
-    private static Game game;
-    private static Editor editor;
-    private static LevelMenu levelMenu;
+    private GameState gameState = GameState.MAINMENU;
+    private MainMenu mainMenu;
+    private Game game;
+    private Editor editor;
+    private LevelMenu levelMenu;
 
-    private static long nextSecond = System.currentTimeMillis() + 1000;
-    public static int framesInLastSecond = 0;
-    private static int framesInCurrentSecond = 0;
+    private long nextSecond = System.currentTimeMillis() + 1000;
+    private int framesInLastSecond = 0;
+    private int framesInCurrentSecond = 0;
+    private int startedPlaceX = 0;
+    private int startedPlaceY = 5;
+    private int startedMoney = 75;
+    private int startedLives = 5;
+    private String mapName = "newMarvelousMap1";
 
-    private static String mapName = "newMarvelousMap1";
-
-    public static void update() {
+    public void update() {
         switch (gameState) {
             case MAINMENU:
                 if (mainMenu == null) mainMenu = new MainMenu();
                 mainMenu.update();
                 break;
             case GAME:
-                if (game == null) game = new Game(mapName);
+                if (game == null) game = new Game(mapName, startedPlaceX, startedPlaceY, startedMoney, startedLives);
                 game.update();
                 break;
             case EDITOR:
@@ -55,11 +59,31 @@ public class StateManager {
         framesInCurrentSecond++;
     }
 
-    public static void setState(GameState newState) {
-        gameState = newState;
+    public int getFramesInLastSecond() {
+        return framesInLastSecond;
     }
 
-    public static void setMapName(String mapName) {
-        StateManager.mapName = mapName;
+    public void setState(GameState newState) {
+        this.gameState = newState;
+    }
+
+    public void setMapName(String mapName) {
+        this.mapName = mapName;
+    }
+
+    public void setStartedPlaceX(int startedPlaceX) {
+        this.startedPlaceX = startedPlaceX;
+    }
+
+    public void setStartedPlaceY(int startedPlaceY) {
+        this.startedPlaceY = startedPlaceY;
+    }
+
+    public void setStartedMoney(int startedMoney) {
+        this.startedMoney = startedMoney;
+    }
+
+    public void setStartedLives(int startedLives) {
+        this.startedLives = startedLives;
     }
 }

@@ -14,7 +14,7 @@ public class TileGrid {
     private int tileWide, tileHigh;
 
     public TileGrid() { // всё поле в траве
-        short towerPickerMenuWidth = TILE_SIZE * 3;
+        int towerPickerMenuWidth = TILE_SIZE * 3;
         this.tileWide = (WIDTH - towerPickerMenuWidth) / TILE_SIZE;
         this.tileHigh = HEIGHT / TILE_SIZE;
         map = new Tile[(Artist.WIDTH - towerPickerMenuWidth) / TILE_SIZE][Artist.HEIGHT / TILE_SIZE];

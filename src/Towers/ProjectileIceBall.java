@@ -1,10 +1,7 @@
 package Towers;
 
 import Data.Enemy;
-import org.newdawn.slick.opengl.Texture;
-
-import static Helpers.Clock.delta;
-import static Helpers.Clock.getDelta;
+import Helpers.Clock;
 
 /**
  * Created by shurik on 14.05.2017.
@@ -25,12 +22,12 @@ public class ProjectileIceBall extends Projectile {
         super.damage();
         if (slowDuration > 0) super.getTarget().setSpeed(getTarget().getStartSpeed() * slowEffect);
         else super.getTarget().setSpeed(getTarget().getStartSpeed());
-        slowDuration=2.5f;
+        slowDuration = 2.5f;
     }
 
     @Override
     public void update() {
         super.update();
-        slowDuration -= delta();
+        slowDuration -= Clock.INSTANCE.delta();
     }
 }

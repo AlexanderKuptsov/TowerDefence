@@ -61,10 +61,10 @@ public class Player {
         // Keyboard Input
         while (Keyboard.next()) {
             if (Keyboard.getEventKey() == Keyboard.KEY_RIGHT && Keyboard.getEventKeyState()) {
-                Clock.changeMultiplier(0.2f);
+                Clock.INSTANCE.changeMultiplier(0.2f);
             }
             if (Keyboard.getEventKey() == Keyboard.KEY_LEFT && Keyboard.getEventKeyState()) {
-                Clock.changeMultiplier(-0.2f);
+                Clock.INSTANCE.changeMultiplier(-0.2f);
             }
             if (Keyboard.getEventKey() == Keyboard.KEY_M && Keyboard.getEventKeyState()) {
                 Cash += 5;

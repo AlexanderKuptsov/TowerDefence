@@ -5,8 +5,6 @@ import Graphics.Tile;
 
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import static Helpers.Artist.TILE_SIZE;
-
 /**
  * Created by shurik on 18.05.2017.
  */

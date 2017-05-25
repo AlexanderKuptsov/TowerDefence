@@ -1,8 +1,6 @@
 package Main;
 
-import Data.EnemyTank;
-import Data.Player;
-import Data.WaveManager;
+import Data.*;
 import Graphics.TileGrid;
 import Helpers.StateManager;
 import Towers.TowerCannon;
@@ -27,33 +25,42 @@ public class Game {
     private WaveManager waveManager;
     private UI gameUI;
     private Texture menuBackground;
+    private Enemy[] enemyTypes;
+    private int startedPlaceX, startedPlaceY, startedMoney, startedLives;
 
     public static int Cash, Lives;
 
-    private final int NUMBER_OF_WAVES = 3;
+    private static final int NUMBER_OF_WAVES = 3;
     private final int TOWER_PICKER_MENU_X = 1280;
     private final int TOWER_PICKER_MENU_Y = 0;
     private final int TOWER_PICKER_MENU_WIDTH = 192;
     private final int TOWER_PICKER_MENU_HEIGHT = 960;
     private final int MAX_TOWERS_IN_ROW = 2;
 
-    public Game(String mapName) {
+    public Game(String mapName, int startedPlaceX, int startedPlaceY, int startedMoney, int startedLives) {
+        this.startedPlaceX = startedPlaceX;
+        this.startedPlaceY = startedPlaceY;
+        this.startedMoney = startedMoney;
+        this.startedLives = startedLives;
+
         //grid = new TileGrid(map);
         grid = loadMap(mapName);
+        enemyTypes = new Enemy[3];
+        enemyTypes[0] = new EnemyTank(EnemyType.Tank, startedPlaceX, startedPlaceY, grid);
+        enemyTypes[1] = new EnemyUFO(EnemyType.UFO, startedPlaceX, startedPlaceY, grid);
+        enemyTypes[2] = new EnemyPlane(EnemyType.Plane, startedPlaceX, startedPlaceY, grid);
 
-       /* waveManager = new WaveManager(new Enemy(quickLoad("tankNavy"),
-                grid.getTile(0, 5), grid, TILE_SIZE, TILE_SIZE, 55, 80), 3, 6);*/
-        waveManager = new WaveManager(new EnemyTank(0, 5, grid), 3, 6);
+        waveManager = new WaveManager(enemyTypes, 3, 6);
 
         player = new Player(grid, waveManager);
         this.menuBackground = quickLoad("menuBackground2");
-        setup();
+        setup(startedMoney, startedLives);
         setupUI();
     }
 
-    private void setup() {
-        Cash = 75;
-        Lives = 5;
+    private void setup(int startedMoney, int startedLives) {
+        Cash = startedMoney;
+        Lives = startedLives;
     }
 
     private void setupUI() {
@@ -82,7 +89,7 @@ public class Game {
         gameUI.drawString(TEXT_X, TEXT_Y, "Lives: " + Lives);
         gameUI.drawString(TEXT_X, TEXT_Y + TEXT_GAP, "Cash: " + Cash + " $");
         gameUI.drawString(TEXT_X, TEXT_Y + TEXT_GAP * 2, "Wave: " + waveManager.getWaveNumber());
-        gameUI.drawString(TEXT_X, TEXT_Y + TEXT_GAP * 3, StateManager.framesInLastSecond + " fps");
+        gameUI.drawString(TEXT_X, TEXT_Y + TEXT_GAP * 3, StateManager.INSTANCE.getFramesInLastSecond() + " fps");
 
         gameUI.drawString(gameUI.getMenu("TowerPicker").getButton("TowerIce").getX() + COST_X_DELTA,
                 gameUI.getMenu("TowerPicker").getButton("TowerIce").getY() + TILE_SIZE,
@@ -115,8 +122,8 @@ public class Game {
     }
 
     private void Restart() {
-        StateManager.setState(StateManager.GameState.MAINMENU);
-        setup();
+        StateManager.INSTANCE.setState(StateManager.GameState.MAINMENU);
+        setup(startedMoney, startedLives);
         waveManager.restartEnemies();
         player.cleanProjectiles();
         player.getTowerList().clear();
@@ -136,9 +143,9 @@ public class Game {
             Restart();
         }
 
-       /* if (Lives <= 0) {
+        if (Lives <= 0) {
             System.out.println("Noob! You loose!");
             Restart();
-        }*/
+        }
     }
 }

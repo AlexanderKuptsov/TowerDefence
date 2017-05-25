@@ -9,11 +9,11 @@ public class WaveManager {
 
     private float timeSinceLastWave, timeBetweenEnemies;
     private int waveNumber, enemiesPerWave;
-    private Enemy enemyType;
+    private Enemy[] enemyTypes;
     private Wave currentWave;
 
-    public WaveManager(Enemy enemyType, float timeBetweenEnemies, int enemiesPerWave) {
-        this.enemyType = enemyType;
+    public WaveManager(Enemy[] enemyTypes, float timeBetweenEnemies, int enemiesPerWave) {
+        this.enemyTypes = enemyTypes;
         this.timeBetweenEnemies = timeBetweenEnemies;
         this.enemiesPerWave = enemiesPerWave;
         this.timeSinceLastWave = 0;
@@ -26,8 +26,8 @@ public class WaveManager {
     public void update() {
         if (!currentWave.isCompleted()) currentWave.update();
         else {
-            enemiesPerWave++;
-            enemyType.setHealth(enemyType.getHealth() * 1.2f);
+            enemiesPerWave += 2;
+           // enemyTypes.setHealth(enemyTypes.getHealth() * 1.2f);
             modifyCash(5 * waveNumber);
             newWave();
         }
@@ -35,7 +35,7 @@ public class WaveManager {
 
     private void newWave() {
         if (waveNumber != 0) currentWave.getEnemies().clear();
-        currentWave = new Wave(enemyType, timeBetweenEnemies, enemiesPerWave);
+        currentWave = new Wave(enemyTypes, timeBetweenEnemies, enemiesPerWave);
         waveNumber++;
         System.out.println("Wave " + waveNumber);
     }

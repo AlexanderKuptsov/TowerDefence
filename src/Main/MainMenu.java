@@ -31,13 +31,13 @@ public class MainMenu {
 
     private void updateButtons() {
         if (menuUI.isButtonClicked("Play"))
-            StateManager.setState(StateManager.GameState.GAME);
+            StateManager.INSTANCE.setState(StateManager.GameState.GAME);
         if (menuUI.isButtonClicked("Editor"))
-            StateManager.setState(StateManager.GameState.EDITOR);
+            StateManager.INSTANCE.setState(StateManager.GameState.EDITOR);
         if (menuUI.isButtonClicked("Quit"))
             System.exit(0);
         if (menuUI.isButtonClicked("Levels"))
-            StateManager.setState(StateManager.GameState.LEVELMENU);
+            StateManager.INSTANCE.setState(StateManager.GameState.LEVELMENU);
     }
 
     public void update() {

@@ -5,7 +5,6 @@ import Helpers.StateManager;
 import org.lwjgl.opengl.Display;
 
 import static Helpers.Artist.BeginSession;
-import static Helpers.StateManager.setState;
 
 /**
  * Created by shurik on 28.04.2017.
@@ -23,8 +22,8 @@ public class Boot {
 
         //Main game loop
         while (!Display.isCloseRequested()) {
-            Clock.update();
-            StateManager.update();
+            Clock.INSTANCE.update();
+            StateManager.INSTANCE.update();
             Display.update();
             Display.sync(60);
         }

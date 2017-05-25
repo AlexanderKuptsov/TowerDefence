@@ -27,16 +27,28 @@ public class LevelMenu {
 
     private void updateButtons() {
         if (menuUI.isButtonClicked("Level 1")) {
-            StateManager.setMapName("newMarvelousMap1");
-            StateManager.setState(StateManager.GameState.GAME);
+            StateManager.INSTANCE.setMapName("newMarvelousMap1");
+            StateManager.INSTANCE.setStartedPlaceX(0);
+            StateManager.INSTANCE.setStartedPlaceY(5);
+            StateManager.INSTANCE.setStartedMoney(75);
+            StateManager.INSTANCE.setStartedLives(5);
+            StateManager.INSTANCE.setState(StateManager.GameState.GAME);
         }
         if (menuUI.isButtonClicked("Level 2")) {
-            StateManager.setMapName("newMarvelousMap2");
-            StateManager.setState(StateManager.GameState.GAME);
+            StateManager.INSTANCE.setMapName("newMarvelousMap2");
+            StateManager.INSTANCE.setStartedPlaceX(0);
+            StateManager.INSTANCE.setStartedPlaceY(5);
+            StateManager.INSTANCE.setStartedMoney(80);
+            StateManager.INSTANCE.setStartedLives(5);
+            StateManager.INSTANCE.setState(StateManager.GameState.GAME);
         }
         if (menuUI.isButtonClicked("Level 3")) {
-            StateManager.setMapName("newMarvelousMap1");
-            StateManager.setState(StateManager.GameState.GAME);
+            StateManager.INSTANCE.setMapName("newMarvelousMap3");
+            StateManager.INSTANCE.setStartedPlaceX(0);
+            StateManager.INSTANCE.setStartedPlaceY(2);
+            StateManager.INSTANCE.setStartedMoney(100);
+            StateManager.INSTANCE.setStartedLives(5);
+            StateManager.INSTANCE.setState(StateManager.GameState.GAME);
         }
     }
 

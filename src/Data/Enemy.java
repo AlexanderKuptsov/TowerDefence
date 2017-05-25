@@ -2,12 +2,12 @@ package Data;
 
 import Graphics.Tile;
 import Graphics.TileGrid;
+import Helpers.Clock;
 import org.newdawn.slick.opengl.Texture;
 
 import java.util.ArrayList;
 
 import static Helpers.Artist.*;
-import static Helpers.Clock.*;
 
 /**
  * Created by shurik on 29.04.2017.
@@ -21,6 +21,7 @@ public class Enemy implements Entity {
     private TileGrid grid;
     private int angle;
 
+    private EnemyType enemyType;
     private Texture enemyRight;
     private Texture enemyLeft;
     private Texture enemyUp;
@@ -31,8 +32,9 @@ public class Enemy implements Entity {
 
     private short healthLabelHeight = 8;
 
-    public Enemy(int tileX, int tileY, TileGrid grid) {
-        this.texture = quickLoad("tankNavy");
+    public Enemy(EnemyType enemyType, int tileX, int tileY, TileGrid grid) {
+        this.enemyType = enemyType;
+        this.texture = enemyType.getTexture();
         this.healthBackGround = quickLoad("healthBackGround");
         this.healthForeGround = quickLoad("healthForeGround");
         this.healthBorder = quickLoad("healthBorder");
@@ -41,9 +43,9 @@ public class Enemy implements Entity {
         this.y = startTile.getY();
         this.width = TILE_SIZE;
         this.height = TILE_SIZE;
-        this.speed = 55;
+        this.speed = enemyType.getSpeed();
         this.startSpeed = speed;
-        this.health = 80;
+        this.health = enemyType.getHealth();
         this.startHealth = health;
         this.grid = grid;
         this.first = true;
@@ -51,10 +53,10 @@ public class Enemy implements Entity {
         this.angle = 180;
         this.earnings = 5;
 
-        this.enemyRight = quickLoad("tankNavy");
-        this.enemyLeft = quickLoad("tankNavyLEFT");
-        this.enemyUp = quickLoad("tankNavyUP");
-        this.enemyDown = quickLoad("tankNavyDOWN");
+        this.enemyRight = enemyType.getTexture();
+        this.enemyLeft = enemyType.getTextureLeft();
+        this.enemyUp = enemyType.getTextureUp();
+        this.enemyDown = enemyType.getTextureDown();
 
         this.checkpoints = new ArrayList<Checkpoint>();
         this.directions = new int[2];
@@ -125,8 +127,8 @@ public class Enemy implements Entity {
                     angle = -90;
                 }
 
-                x += delta() * checkpoints.get(currentCheckpoint).getXDirection() * speed;
-                y += delta() * checkpoints.get(currentCheckpoint).getYDirection() * speed;
+                x += Clock.INSTANCE.delta() * checkpoints.get(currentCheckpoint).getXDirection() * speed;
+                y += Clock.INSTANCE.delta() * checkpoints.get(currentCheckpoint).getYDirection() * speed;
             }
         }
     }
@@ -242,7 +244,7 @@ public class Enemy implements Entity {
         final float lowHealth = 0.3f;
         if (healthPercent < lowHealth) {
             short deltaYPos = 0;
-            final short deltaXPos = (TILE_SIZE * 3) / 4;
+            final int deltaXPos = (TILE_SIZE * 3) / 4;
             if (angle == 90 || angle == -90) deltaYPos = 16;
             drawQuadTextureRotation(quickLoad("fire"),
                     x + TILE_SIZE / 2 - deltaXPos, y - TILE_SIZE / 2 + deltaYPos, 96, 96, angle);
@@ -305,8 +307,8 @@ public class Enemy implements Entity {
         return texture;
     }
 
-    public void setTexture(Texture texture) {
-        this.texture = texture;
+    public void setTexture(String textureName) {
+        this.texture = quickLoad(textureName);
     }
 
     public Tile getStartTile() {
@@ -333,19 +335,27 @@ public class Enemy implements Entity {
         return alive;
     }
 
-    public void setEnemyRight(Texture enemyRight) {
-        this.enemyRight = enemyRight;
+    public void setEnemyRight(String textureName) {
+        this.enemyRight = quickLoad(textureName);
     }
 
-    public void setEnemyLeft(Texture enemyLeft) {
-        this.enemyLeft = enemyLeft;
+    public void setEnemyLeft(String textureName) {
+        this.enemyLeft = quickLoad(textureName);
     }
 
-    public void setEnemyUp(Texture enemyUp) {
-        this.enemyUp = enemyUp;
+    public void setEnemyUp(String textureName) {
+        this.enemyUp = quickLoad(textureName);
     }
 
-    public void setEnemyDown(Texture enemyDown) {
-        this.enemyDown = enemyDown;
+    public void setEnemyDown(String textureName) {
+        this.enemyDown = quickLoad(textureName);
+    }
+
+    public TileGrid getGrid() {
+        return grid;
+    }
+
+    public EnemyType getEnemyType() {
+        return enemyType;
     }
 }
