@@ -84,6 +84,15 @@ public class UI {
         }
 
         public void addButton(Button b) {
+            setButton(b);
+        }
+
+        public void quickAdd(String name, String buttonTextureName) {
+            Button b = new Button(name, quickLoad(buttonTextureName), 0, 0);
+            setButton(b);
+        }
+
+        private void setButton(Button b) {
             final int FIRST_GAP = 70;
             if (optionsWidth != 0)
                 b.setY(y + (numberOfButtons / optionsWidth) * (TILE_SIZE + gap) + gap + FIRST_GAP);

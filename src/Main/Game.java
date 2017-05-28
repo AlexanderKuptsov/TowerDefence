@@ -7,8 +7,8 @@ import Towers.TowerCannon;
 import Towers.TowerFlameThrower;
 import Towers.TowerIce;
 import Towers.TowerType;
-import UI.Button;
 import UI.UI;
+import UI.UI.Menu;
 import org.lwjgl.input.Mouse;
 import org.newdawn.slick.opengl.Texture;
 
@@ -27,15 +27,20 @@ public class Game {
     private Texture menuBackground;
     private Enemy[] enemyTypes;
     private int startedPlaceX, startedPlaceY, startedMoney, startedLives;
-
+    private Menu towerPickerMenu;
     public static int Cash, Lives;
 
     private static final int NUMBER_OF_WAVES = 3;
-    private final int TOWER_PICKER_MENU_X = 1280;
-    private final int TOWER_PICKER_MENU_Y = 0;
-    private final int TOWER_PICKER_MENU_WIDTH = 192;
-    private final int TOWER_PICKER_MENU_HEIGHT = 960;
-    private final int MAX_TOWERS_IN_ROW = 2;
+    private static final int TOWER_PICKER_MENU_X = 1280;
+    private static final int TOWER_PICKER_MENU_Y = 0;
+    private static final int TOWER_PICKER_MENU_WIDTH = 192;
+    private static final int TOWER_PICKER_MENU_HEIGHT = 960;
+    private static final int MAX_TOWERS_IN_ROW = 2;
+    private static final int QUITE_BUTTON_X = 1334;
+    private static final int QUITE_BUTTON_Y = 825;
+    private static final int QUITE_BUTTON_WIDTH = 80;
+    private static final int QUITE_BUTTON_HEIGHT = 80;
+
 
     public Game(String mapName, int startedPlaceX, int startedPlaceY, int startedMoney, int startedLives) {
         this.startedPlaceX = startedPlaceX;
@@ -68,15 +73,13 @@ public class Game {
 
         gameUI.createMenu("TowerPicker", TOWER_PICKER_MENU_X, TOWER_PICKER_MENU_Y,
                 TOWER_PICKER_MENU_WIDTH, TOWER_PICKER_MENU_HEIGHT, MAX_TOWERS_IN_ROW, 0);
+        towerPickerMenu = gameUI.getMenu("TowerPicker");
 
-        gameUI.getMenu("TowerPicker").addButton(
-                new Button("TowerIce", quickLoad("Towers/towerIceFull"), 0, 0, TILE_SIZE, TILE_SIZE));
-        gameUI.getMenu("TowerPicker").addButton(
-                new Button("FlameThrower", quickLoad("Towers/flameThrowerFull"), 0, 0, TILE_SIZE, TILE_SIZE));
-        gameUI.getMenu("TowerPicker").addButton(
-                new Button("TowerCannonPurple", quickLoad("Towers/towerPurpleFull"), 0, 0, TILE_SIZE, TILE_SIZE));
-
-        gameUI.addButton("Quit", "quit", 1334, 825, 80, 80);
+        towerPickerMenu.quickAdd("TowerIce", "Towers/towerIceFull");
+        towerPickerMenu.quickAdd("FlameThrower", "Towers/flameThrowerFull");
+        towerPickerMenu.quickAdd("TowerCannonPurple", "Towers/towerPurpleFull");
+        gameUI.addButton("Quit", "quit",
+                QUITE_BUTTON_X, QUITE_BUTTON_Y, QUITE_BUTTON_WIDTH, QUITE_BUTTON_HEIGHT);
     }
 
     private void updateUI() {
@@ -104,13 +107,13 @@ public class Game {
         if (Mouse.next()) {
             boolean mouseClicked = Mouse.isButtonDown(0);
             if (mouseClicked) {
-                if (gameUI.getMenu("TowerPicker").isButtonClicked("TowerIce"))
+                if (towerPickerMenu.isButtonClicked("TowerIce"))
                     player.pickTower(new TowerIce(TowerType.CannonIce, grid.getTile(0, 0),
                             waveManager.getCurrentWave().getEnemies()));
-                if (gameUI.getMenu("TowerPicker").isButtonClicked("FlameThrower"))
+                if (towerPickerMenu.isButtonClicked("FlameThrower"))
                     player.pickTower(new TowerFlameThrower(TowerType.FlameThrower, grid.getTile(0,
                             0), waveManager.getCurrentWave().getEnemies()));
-                if (gameUI.getMenu("TowerPicker").isButtonClicked("TowerCannonPurple"))
+                if (towerPickerMenu.isButtonClicked("TowerCannonPurple"))
                     player.pickTower(new TowerCannon(TowerType.CannonPurple, grid.getTile(0, 0),
                             waveManager.getCurrentWave().getEnemies()));
 

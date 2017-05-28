@@ -42,7 +42,7 @@ public class MainMenu {
 
     public void update() {
         drawQuadTexture(background, 0, 0, 2048, 1024);
-        menuUI.draw();
         updateButtons();
+        menuUI.draw();
     }
 }

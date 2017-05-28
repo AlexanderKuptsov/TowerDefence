@@ -19,4 +19,8 @@ public enum TileType {
     public boolean isBuildable() {
         return buildable;
     }
+
+    public String getTextureName() {
+        return textureName;
+    }
 }
