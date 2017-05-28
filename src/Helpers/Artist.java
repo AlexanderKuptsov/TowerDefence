@@ -9,6 +9,7 @@ import org.newdawn.slick.util.ResourceLoader;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.ByteBuffer;
 
 import static Main.Game.Cash;
 import static Main.Game.Lives;
@@ -24,6 +25,7 @@ public class Artist {
         Display.setTitle("Uncrackable Defence");
         try {
             Display.setDisplayMode(new DisplayMode(WIDTH, HEIGHT));
+            Display.setLocation(Display.getDesktopDisplayMode().getWidth() / 2 - WIDTH / 2, 0);
             Display.create();
             Display.setVSyncEnabled(true);
             Display.swapBuffers();

@@ -78,7 +78,7 @@ public class Game {
         towerPickerMenu.quickAdd("TowerIce", "Towers/towerIceFull");
         towerPickerMenu.quickAdd("FlameThrower", "Towers/flameThrowerFull");
         towerPickerMenu.quickAdd("TowerCannonPurple", "Towers/towerPurpleFull");
-        gameUI.addButton("Quit", "quit",
+        gameUI.addButton("Quit", "menu",
                 QUITE_BUTTON_X, QUITE_BUTTON_Y, QUITE_BUTTON_WIDTH, QUITE_BUTTON_HEIGHT);
     }
 
@@ -117,8 +117,10 @@ public class Game {
                     player.pickTower(new TowerCannon(TowerType.CannonPurple, grid.getTile(0, 0),
                             waveManager.getCurrentWave().getEnemies()));
 
-                if (gameUI.isButtonClicked("Quit"))
-                    System.exit(0);
+                if (gameUI.isButtonClicked("Quit")) {
+                    Restart();
+                    StateManager.INSTANCE.setState(StateManager.GameState.MAINMENU);
+                }
             }
         }
         drawQuadTexture(grid.getTile(0, 0).getTexture(), 0, 0, TILE_SIZE, TILE_SIZE);

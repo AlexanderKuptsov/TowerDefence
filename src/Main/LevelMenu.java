@@ -23,6 +23,9 @@ public class LevelMenu {
                 BUTTON_SIZE, BUTTON_SIZE);
         menuUI.addButton("Level 3", "3", WIDTH / 2 - BUTTON_SIZE / 2, (int) (HEIGHT * 0.65f),
                 BUTTON_SIZE, BUTTON_SIZE);
+
+        menuUI.addButton("Menu", "menu", WIDTH / 2 + BUTTON_SIZE, (int) (HEIGHT * 0.65f),
+                BUTTON_SIZE, BUTTON_SIZE);
     }
 
     private void updateButtons() {
@@ -50,6 +53,8 @@ public class LevelMenu {
             StateManager.INSTANCE.setStartedLives(5);
             StateManager.INSTANCE.setState(StateManager.GameState.GAME);
         }
+        if (menuUI.isButtonClicked("Menu"))
+            StateManager.INSTANCE.setState(StateManager.GameState.MAINMENU);
     }
 
     public void update() {

@@ -64,7 +64,7 @@ public class Editor {
         tilePickerMenu.quickAdd("Bush", TileType.Bush.getTextureName());
         tilePickerMenu.quickAdd("Stones", TileType.Stones.getTextureName());
 
-        editorUI.addButton("Quit", "quit",
+        editorUI.addButton("Quit", "menu",
                 QUITE_BUTTON_X, QUITE_BUTTON_Y, QUITE_BUTTON_WIDTH, QUITE_BUTTON_HEIGHT);
 
     }
