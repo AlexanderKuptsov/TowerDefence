@@ -30,8 +30,14 @@ public class MainMenu {
     }
 
     private void updateButtons() {
-        if (menuUI.isButtonClicked("Play"))
+        if (menuUI.isButtonClicked("Play")) {
+            StateManager.INSTANCE.setMapName("newMarvelousMap1");
+            StateManager.INSTANCE.setStartedPlaceX(0);
+            StateManager.INSTANCE.setStartedPlaceY(5);
+            StateManager.INSTANCE.setStartedMoney(75);
+            StateManager.INSTANCE.setStartedLives(5);
             StateManager.INSTANCE.setState(StateManager.GameState.GAME);
+        }
         if (menuUI.isButtonClicked("Editor"))
             StateManager.INSTANCE.setState(StateManager.GameState.EDITOR);
         if (menuUI.isButtonClicked("Quit"))

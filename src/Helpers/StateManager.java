@@ -35,6 +35,7 @@ public enum StateManager {
         switch (gameState) {
             case MAINMENU:
                 if (mainMenu == null) mainMenu = new MainMenu();
+                game = null;
                 mainMenu.update();
                 break;
             case GAME:
