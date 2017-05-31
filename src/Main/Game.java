@@ -2,18 +2,15 @@ package Main;
 
 import Data.*;
 import Graphics.TileGrid;
+import Helpers.LevelManager;
 import Helpers.StateManager;
-import Towers.TowerCannon;
-import Towers.TowerFlameThrower;
-import Towers.TowerIce;
-import Towers.TowerType;
+import Towers.*;
 import UI.UI;
 import UI.UI.Menu;
 import org.lwjgl.input.Mouse;
 import org.newdawn.slick.opengl.Texture;
 
 import static Helpers.Artist.*;
-import static Helpers.LevelManager.loadMap;
 
 /**
  * Created by shurik on 02.05.2017.
@@ -30,7 +27,8 @@ public class Game {
     private Menu towerPickerMenu;
     public static int Cash, Lives;
 
-    private static final int NUMBER_OF_WAVES = 3;
+    private static final int NUMBER_OF_WAVES = 5;
+
     private static final int TOWER_PICKER_MENU_X = 1280;
     private static final int TOWER_PICKER_MENU_Y = 0;
     private static final int TOWER_PICKER_MENU_WIDTH = 192;
@@ -49,13 +47,26 @@ public class Game {
         this.startedLives = startedLives;
 
         //grid = new TileGrid(map);
-        grid = loadMap(mapName);
+        grid = LevelManager.INSTANCE.loadMap(mapName);
         enemyTypes = new Enemy[3];
         enemyTypes[0] = new EnemyTank(EnemyType.Tank, startedPlaceX, startedPlaceY, grid);
         enemyTypes[1] = new EnemyUFO(EnemyType.UFO, startedPlaceX, startedPlaceY, grid);
         enemyTypes[2] = new EnemyPlane(EnemyType.Plane, startedPlaceX, startedPlaceY, grid);
 
-        waveManager = new WaveManager(enemyTypes, 3, 6);
+        switch (mapName) {
+            case "src\\res\\maps\\newMarvelousMap1":
+                waveManager = new WaveManager(enemyTypes, 3, 8, 1.25f);
+                break;
+            case "src\\res\\maps\\newMarvelousMap2":
+                waveManager = new WaveManager(enemyTypes, 2, 9, 1.3f);
+                break;
+            case "src\\res\\maps\\newMarvelousMap3":
+                waveManager = new WaveManager(enemyTypes, 1.2f, 15, 1.5f);
+                break;
+            default:
+                waveManager = new WaveManager(enemyTypes, 3, 8, 1.25f);
+                break;
+        }
 
         player = new Player(grid, waveManager);
         this.menuBackground = quickLoad("menuBackground2");
@@ -75,9 +86,11 @@ public class Game {
                 TOWER_PICKER_MENU_WIDTH, TOWER_PICKER_MENU_HEIGHT, MAX_TOWERS_IN_ROW, 0);
         towerPickerMenu = gameUI.getMenu("TowerPicker");
 
-        towerPickerMenu.quickAdd("TowerIce", "Towers/towerIceFull");
-        towerPickerMenu.quickAdd("FlameThrower", "Towers/flameThrowerFull");
-        towerPickerMenu.quickAdd("TowerCannonPurple", "Towers/towerPurpleFull");
+        towerPickerMenu.quickAdd("TowerIce", "Towers\\towerIceFull");
+        towerPickerMenu.quickAdd("FlameThrower", "Towers\\flameThrowerFull");
+        towerPickerMenu.quickAdd("TowerCannonPurple", "Towers\\towerPurpleFull");
+        towerPickerMenu.quickAdd("Mortal", "Towers\\towerMortalFull");
+
         gameUI.addButton("Quit", "menu",
                 QUITE_BUTTON_X, QUITE_BUTTON_Y, QUITE_BUTTON_WIDTH, QUITE_BUTTON_HEIGHT);
     }
@@ -103,6 +116,9 @@ public class Game {
         gameUI.drawString(gameUI.getMenu("TowerPicker").getButton("TowerCannonPurple").getX() + COST_X_DELTA,
                 gameUI.getMenu("TowerPicker").getButton("TowerCannonPurple").getY() + TILE_SIZE,
                 TowerType.CannonPurple.getCost() + " $");
+        gameUI.drawString(gameUI.getMenu("TowerPicker").getButton("Mortal").getX() + COST_X_DELTA,
+                gameUI.getMenu("TowerPicker").getButton("Mortal").getY() + TILE_SIZE,
+                TowerType.Mortal.getCost() + " $");
 
         if (Mouse.next()) {
             boolean mouseClicked = Mouse.isButtonDown(0);
@@ -115,6 +131,9 @@ public class Game {
                             0), waveManager.getCurrentWave().getEnemies()));
                 if (towerPickerMenu.isButtonClicked("TowerCannonPurple"))
                     player.pickTower(new TowerCannon(TowerType.CannonPurple, grid.getTile(0, 0),
+                            waveManager.getCurrentWave().getEnemies()));
+                if (towerPickerMenu.isButtonClicked("Mortal"))
+                    player.pickTower(new TowerMortal(TowerType.Mortal, grid.getTile(0, 0),
                             waveManager.getCurrentWave().getEnemies()));
 
                 if (gameUI.isButtonClicked("Quit")) {

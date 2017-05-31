@@ -9,23 +9,29 @@ import static Helpers.Artist.quickLoad;
  */
 public enum EnemyType {
 
-    Tank(quickLoad("tankNavy"), quickLoad("tankNavyLEFT"), quickLoad("tankNavyUP"), quickLoad("tankNavyDOWN"),
-            55, 90),
-    Plane(quickLoad("PlaneRight"), quickLoad("PlaneLeft"), quickLoad("PlaneUP"), quickLoad("PlaneDown"),
-            70, 80),
-    UFO(quickLoad("UFO2"), quickLoad("UFO2"), quickLoad("UFO2"), quickLoad("UFO2"),
-            30, 135);
+    Tank(quickLoad("tankNavy"), quickLoad("tankNavyLEFT"),
+            quickLoad("tankNavyUP"), quickLoad("tankNavyDOWN"),
+            60, 90, 6),
+
+    Plane(quickLoad("PlaneRight"), quickLoad("PlaneLeft"),
+            quickLoad("PlaneUP"), quickLoad("PlaneDown"),
+            75, 80, 5),
+
+    UFO(quickLoad("UFO2"), quickLoad("UFO2"),
+            quickLoad("UFO2"), quickLoad("UFO2"),
+            35, 135, 8);
 
     private Texture texture, textureLeft, textureUp, textureDown;
-    private int speed, health;
+    private int speed, health, earnings;
 
-    EnemyType(Texture texture, Texture textureLeft, Texture textureUp, Texture textureDown, int speed, int health) {
+    EnemyType(Texture texture, Texture textureLeft, Texture textureUp, Texture textureDown, int speed, int health, int earnings) {
         this.texture = texture;
         this.textureLeft = textureLeft;
         this.textureUp = textureUp;
         this.textureDown = textureDown;
         this.speed = speed;
         this.health = health;
+        this.earnings = earnings;
     }
 
     public Texture getTexture() {
@@ -50,5 +56,9 @@ public enum EnemyType {
 
     public int getHealth() {
         return health;
+    }
+
+    public int getEarnings() {
+        return earnings;
     }
 }

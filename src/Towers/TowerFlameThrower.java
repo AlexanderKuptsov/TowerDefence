@@ -1,6 +1,7 @@
 package Towers;
 
 import Data.Enemy;
+import Data.EnemyType;
 import Graphics.Tile;
 
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -19,5 +20,4 @@ public class TowerFlameThrower extends Tower {
         super.projectiles.add(new ProjectileFire(super.type.projectileType, super.target,
                 super.getX(), super.getY(), 64, 64));
     }
-
 }

@@ -1,5 +1,9 @@
 package Data;
 
+import Helpers.Clock;
+
+import java.util.concurrent.CopyOnWriteArrayList;
+
 import static Helpers.Artist.modifyCash;
 
 /**
@@ -7,18 +11,18 @@ import static Helpers.Artist.modifyCash;
  */
 public class WaveManager {
 
-    private float timeSinceLastWave, timeBetweenEnemies;
+    private float timeBetweenEnemies, difficultyMulti, currentDifMulti;
     private int waveNumber, enemiesPerWave;
     private Enemy[] enemyTypes;
     private Wave currentWave;
 
-    public WaveManager(Enemy[] enemyTypes, float timeBetweenEnemies, int enemiesPerWave) {
+    public WaveManager(Enemy[] enemyTypes, float timeBetweenEnemies, int enemiesPerWave, float difficultyMulti) {
         this.enemyTypes = enemyTypes;
         this.timeBetweenEnemies = timeBetweenEnemies;
         this.enemiesPerWave = enemiesPerWave;
-        this.timeSinceLastWave = 0;
         this.waveNumber = 0;
-
+        this.difficultyMulti = difficultyMulti;
+        currentDifMulti = 1f;
         this.currentWave = null;
         newWave();
     }
@@ -27,7 +31,6 @@ public class WaveManager {
         if (!currentWave.isCompleted()) currentWave.update();
         else {
             enemiesPerWave += 2;
-           // enemyTypes.setHealth(enemyTypes.getHealth() * 1.2f);
             modifyCash(5 * waveNumber);
             newWave();
         }
@@ -35,9 +38,9 @@ public class WaveManager {
 
     private void newWave() {
         if (waveNumber != 0) currentWave.getEnemies().clear();
-        currentWave = new Wave(enemyTypes, timeBetweenEnemies, enemiesPerWave);
+        currentWave = new Wave(enemyTypes, timeBetweenEnemies, enemiesPerWave, currentDifMulti);
         waveNumber++;
-        System.out.println("Wave " + waveNumber);
+        currentDifMulti = difficultyMulti;
     }
 
     public void restartEnemies() {

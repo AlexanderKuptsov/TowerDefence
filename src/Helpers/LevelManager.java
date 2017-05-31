@@ -11,9 +11,10 @@ import static Graphics.TileType.Dirt;
 /**
  * Created by shurik on 08.05.2017.
  */
-public class LevelManager {
+public enum LevelManager {
+    INSTANCE;
 
-    public static void saveMap(String mapName, TileGrid grid) {
+    public void saveMap(String mapName, TileGrid grid) {
         StringBuilder mapDate = new StringBuilder();
         for (int i = 0; i < grid.getTileWide(); i++) {
             for (int j = 0; j < grid.getTileHigh(); j++) {
@@ -30,7 +31,7 @@ public class LevelManager {
         }
     }
 
-    public static TileGrid loadMap(String mapName) {
+    public TileGrid loadMap(String mapName) {
         TileGrid grid = new TileGrid();
 
         try {
@@ -50,7 +51,7 @@ public class LevelManager {
         return grid;
     }
 
-    public static TileType getTileType(String ID) {
+    public TileType getTileType(String ID) {
         TileType type = TileType.NULL;
         switch (ID) {
             case "0":
@@ -78,7 +79,7 @@ public class LevelManager {
         return type;
     }
 
-    public static String getTileID(Tile t) {
+    public String getTileID(Tile t) {
         String ID = "E";
         switch (t.getType()) {
             case Grass:

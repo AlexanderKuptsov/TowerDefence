@@ -15,7 +15,7 @@ public class MainMenu {
     private UI menuUI;
 
     public MainMenu() {
-        background = quickLoad("mainmenu");
+        background = quickLoad("mainMenu");
         menuUI = new UI();
         int BUTTON_SIZE = 256;
         menuUI.addButton("Play", "play", WIDTH / 2 - BUTTON_SIZE / 2, (int) (HEIGHT * 0.05f),
@@ -31,7 +31,7 @@ public class MainMenu {
 
     private void updateButtons() {
         if (menuUI.isButtonClicked("Play")) {
-            StateManager.INSTANCE.setMapName("newMarvelousMap1");
+            StateManager.INSTANCE.setMapName("src\\res\\maps\\newMarvelousMap1");
             StateManager.INSTANCE.setStartedPlaceX(0);
             StateManager.INSTANCE.setStartedPlaceY(5);
             StateManager.INSTANCE.setStartedMoney(75);

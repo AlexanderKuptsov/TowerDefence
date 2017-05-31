@@ -12,15 +12,10 @@ import static Helpers.Artist.BeginSession;
 public class Boot {
 
     public Boot() {
-        //Call static method in Artist class to initialize OpenGL calls
+        // Call static method in Artist class to initialize OpenGL calls
         BeginSession();
 
-        /*
-        Clock clock=new Clock();
-        StateManager stateManager=new StateManager();
-        */
-
-        //Main game loop
+        // Main game loop
         while (!Display.isCloseRequested()) {
             Clock.INSTANCE.update();
             StateManager.INSTANCE.update();

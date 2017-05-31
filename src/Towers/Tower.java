@@ -20,7 +20,7 @@ public abstract class Tower implements Entity {
     private float x, y, timeSinceLastShot, range, firingRate, angle;
     private int width, height, cost;
     private CopyOnWriteArrayList<Enemy> enemies;
-    private boolean targeted;
+    private boolean targeted, working;
     public Enemy target;
     private Texture[] textures;
     public ArrayList<Projectile> projectiles;
@@ -37,6 +37,7 @@ public abstract class Tower implements Entity {
         this.range = type.range;
         this.firingRate = type.firingRate;
         this.targeted = false;
+        this.working = true;
         this.timeSinceLastShot = 0;
         this.angle = 0f;
         this.enemies = enemies;
@@ -45,8 +46,7 @@ public abstract class Tower implements Entity {
 
     private Enemy acquireTarget() {
         Enemy closest = null;
-        final int MAX_DISTANCE = 3000;
-        float closestDistance = MAX_DISTANCE;
+        float closestDistance = 3000;
         for (Enemy e : enemies) {
             if (isInRange(e) && findDistance(e) < closestDistance && e.isAlive()) {
                 closestDistance = findDistance(e);
@@ -82,23 +82,26 @@ public abstract class Tower implements Entity {
 
 
     public void update() {
-        if (!targeted) {
-            target = acquireTarget();
-        } else {
-            angle = calculateAngle();
-            if (timeSinceLastShot > firingRate && isInRange(target)) {
-                shoot(target);
-                timeSinceLastShot = 0;
+        if (working) {
+            if (!targeted) {
+                target = acquireTarget();
+            } else {
+                angle = calculateAngle();
+                if (timeSinceLastShot > firingRate && isInRange(target)) {
+                    shoot(target);
+                    timeSinceLastShot = 0;
+                }
             }
+
+            if (target == null || !target.isAlive() || !isInRange(target)) targeted = false;
+
+            timeSinceLastShot += Clock.INSTANCE.delta();
+
+            for (Projectile p : projectiles) p.update();
+            if (target != null && !target.isAlive()) projectiles.clear();
+
+            draw();
         }
-
-        if (target == null || !target.isAlive() || !isInRange(target)) targeted = false;
-
-        timeSinceLastShot += Clock.INSTANCE.delta();
-
-        for (Projectile p : projectiles) p.update();
-        if (target != null && !target.isAlive()) projectiles.clear();
-        draw();
     }
 
     public void draw() {
@@ -141,8 +144,28 @@ public abstract class Tower implements Entity {
         this.height = height;
     }
 
+    public Texture[] getTextures() {
+        return textures;
+    }
+
+    public float getAngle() {
+        return angle;
+    }
+
     public Enemy getTarget() {
         return target;
+    }
+
+    public CopyOnWriteArrayList<Enemy> getEnemies() {
+        return enemies;
+    }
+
+    public boolean isWorking() {
+        return working;
+    }
+
+    public void setWorking(boolean state) {
+        this.working = state;
     }
 
     public int getCost() {

@@ -9,7 +9,6 @@ import org.newdawn.slick.util.ResourceLoader;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.ByteBuffer;
 
 import static Main.Game.Cash;
 import static Main.Game.Lives;
@@ -19,7 +18,8 @@ import static org.lwjgl.opengl.GL11.*;
  * Created by shurik on 28.04.2017.
  */
 public class Artist {
-    public static int WIDTH = 1472, HEIGHT = 960, TILE_SIZE = 64;
+
+    public static final int WIDTH = 1472, HEIGHT = 960, TILE_SIZE = 64;
 
     public static void BeginSession() {
         Display.setTitle("Uncrackable Defence");
@@ -118,6 +118,6 @@ public class Artist {
     }
 
     public static Texture quickLoad(String name) {
-        return loadTexture("res/" + name + ".png", "PNG");
+        return loadTexture("res\\" + name + ".png", "PNG");
     }
 }

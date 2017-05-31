@@ -45,7 +45,7 @@ public enum Clock {
 
     public void changeMultiplier(float change) {
         short minMulti = 0;
-        short maxMulti = 5;
+        short maxMulti = 3;
         if (!(multiplier + change < minMulti && multiplier + change > maxMulti)) {
             multiplier += change;
         }

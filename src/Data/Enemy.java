@@ -51,7 +51,7 @@ public class Enemy implements Entity {
         this.first = true;
         this.alive = true;
         this.angle = 180;
-        this.earnings = 5;
+        this.earnings = enemyType.getEarnings();
 
         this.enemyRight = enemyType.getTexture();
         this.enemyLeft = enemyType.getTextureLeft();
@@ -142,7 +142,7 @@ public class Enemy implements Entity {
         boolean reached = false;
         Tile t = checkpoints.get(currentCheckpoint).getTile();
         // проверка заранее (не доходя немного)
-        final short preGap = 3;
+        final short preGap = 6;
         if (x > t.getX() - preGap && x < t.getX() + preGap && y > t.getY() - preGap && y < t.getY() + preGap) {
             reached = true;
             x = t.getX();
@@ -273,6 +273,14 @@ public class Enemy implements Entity {
 
     public void setHealth(float health) {
         this.health = health;
+    }
+
+    public float getStartHealth() {
+        return startHealth;
+    }
+
+    public void setStartHealth(float startHealth) {
+        this.startHealth = startHealth;
     }
 
     public float getX() {

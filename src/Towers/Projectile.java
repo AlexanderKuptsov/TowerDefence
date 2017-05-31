@@ -56,22 +56,34 @@ public abstract class Projectile implements Entity {
         alive = false;
     }
 
+    public void checkingHitting(){
+        if (checkCollision(x, y, width, height,
+                target.getX(), target.getY(), target.getWidth(), target.getHeight())) {
+            damage();
+        }
+    }
+
+    public void autoAiming(){
+        calculateDirection();
+    }
+
     public void update() {
         if (alive) {
-            calculateDirection();
+            autoAiming();
             x += xVelocity * speed * Clock.INSTANCE.delta();
             y += yVelocity * speed * Clock.INSTANCE.delta();
+            checkingHitting();
 
-            if (checkCollision(x, y, width, height,
-                    target.getX(), target.getY(), target.getWidth(), target.getHeight())) {
-                damage();
-            }
             draw();
         }
     }
 
     public void draw() {
         drawQuadTextureRotation(texture, x, y, width, height, calculateAngle());
+    }
+
+    public Texture getTexture() {
+        return texture;
     }
 
     public float getX() {
@@ -104,6 +116,10 @@ public abstract class Projectile implements Entity {
 
     public void setHeight(int height) {
         this.height = height;
+    }
+
+    public float getDamage() {
+        return damage;
     }
 
     public Enemy getTarget() {

@@ -9,17 +9,18 @@ import static Helpers.Artist.*;
  */
 public enum TowerType {
 
-    CannonRed(new Texture[]{quickLoad("Towers/cannonBase"), quickLoad("Towers/cannonGun")},
-            ProjectileType.Rocket, TILE_SIZE * 3, 0.3f, 0),
-
-    CannonPurple(new Texture[]{quickLoad("Towers/towerBase"), quickLoad("Towers/towerPurpleGun")},
+    CannonPurple(new Texture[]{quickLoad("Towers\\towerBase"), quickLoad("Towers\\towerPurpleGun")},
             ProjectileType.Rocket, TILE_SIZE * 3.5f, 1.5f, 15),
 
-    CannonIce(new Texture[]{quickLoad("Towers/cannonBaseBlue"), quickLoad("Towers/cannonGunBlue")},
+    CannonIce(new Texture[]{quickLoad("Towers\\cannonBaseBlue"), quickLoad("Towers\\cannonGunBlue")},
             ProjectileType.IceBall, TILE_SIZE * 2.5f, 1.5f, 20),
 
-    FlameThrower(new Texture[]{quickLoad("Towers/cannonBase"), quickLoad("Towers/cannonGun")},
-            ProjectileType.Fire, TILE_SIZE * 2.5f, 0.06f, 40);
+    FlameThrower(new Texture[]{quickLoad("Towers\\cannonBase"), quickLoad("Towers\\cannonGun")},
+            ProjectileType.Fire, TILE_SIZE * 2.5f, 0.06f, 40),
+
+    Mortal(new Texture[]{quickLoad("Towers\\towerBase"), quickLoad("Towers\\towerMortalGun"),quickLoad("shuriken")},
+            ProjectileType.Shuriken, TILE_SIZE * 3.8f, 3.2f, 50);
+
 
     Texture[] textures;
     ProjectileType projectileType;

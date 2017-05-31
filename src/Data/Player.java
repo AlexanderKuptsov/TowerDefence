@@ -44,7 +44,6 @@ public class Player {
 
         for (Tower t : towerList) {
             t.update();
-            t.draw();
             t.updateEnemyList(waveManager.getCurrentWave().getEnemies());
         }
 
@@ -53,6 +52,9 @@ public class Player {
         boolean possibleToBuild = getMouseTile().getType().isBuildable() && isPlaceFree(getMouseTile());
         if (Mouse.isButtonDown(0) && !rightMouseButtonDown && possibleToBuild) {
             placeTower();
+        }
+        if (Mouse.isButtonDown(1) && !leftMouseButtonDown && !isPlaceFree(getMouseTile())) {
+            sellTower(getMouseTile());
         }
 
         leftMouseButtonDown = Mouse.isButtonDown(1);
@@ -86,13 +88,22 @@ public class Player {
         holdingTower = true;
     }
 
+    private void sellTower(Tile mouseTile) {
+        for (Tower t : towerList) {
+            if (t.getX() / TILE_SIZE == mouseTile.getX() / TILE_SIZE &&
+                    t.getY() / TILE_SIZE == mouseTile.getY() / TILE_SIZE)
+                t.setWorking(false);
+            modifyCash((int) (t.getCost() * 0.5f));
+        }
+    }
+
     private Tile getMouseTile() {
         return grid.getTile(Mouse.getX() / TILE_SIZE, (HEIGHT - Mouse.getY() - 1) / TILE_SIZE);
     }
 
     private boolean isPlaceFree(Tile mouseTile) {
         for (Tower t : towerList) {
-            if (t.getX() / TILE_SIZE == mouseTile.getX() / TILE_SIZE &&
+            if (t.isWorking() && t.getX() / TILE_SIZE == mouseTile.getX() / TILE_SIZE &&
                     t.getY() / TILE_SIZE == mouseTile.getY() / TILE_SIZE)
                 return false;
         }

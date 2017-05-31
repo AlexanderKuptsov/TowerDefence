@@ -3,6 +3,7 @@ package Main;
 import Graphics.TileGrid;
 import Graphics.TileType;
 
+import Helpers.LevelManager;
 import Helpers.StateManager;
 import UI.*;
 import UI.UI.Menu;
@@ -11,7 +12,6 @@ import org.lwjgl.input.Mouse;
 import org.newdawn.slick.opengl.Texture;
 
 import static Helpers.Artist.*;
-import static Helpers.LevelManager.saveMap;
 
 /**
  * Created by shurik on 06.05.2017.
@@ -97,7 +97,7 @@ public class Editor {
         // Keyboard Input
         while (Keyboard.next()) {
             if (Keyboard.getEventKey() == Keyboard.KEY_S && Keyboard.getEventKeyState()) {
-                saveMap("newMarvelousMap4", grid);
+                LevelManager.INSTANCE.saveMap("newMarvelousMap4", grid);
             }
         }
 
