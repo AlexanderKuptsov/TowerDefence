@@ -36,8 +36,8 @@ public abstract class Projectile implements Entity {
 
     private void calculateDirection() {
         float totAllowedMovement = 1.0f;
-        float xDistanceFromTarget = Math.abs(target.getX() - x - TILE_SIZE / 4 + TILE_SIZE / 2);
-        float yDistanceFromTarget = Math.abs(target.getY() - y - TILE_SIZE / 4 + TILE_SIZE / 2);
+        float xDistanceFromTarget = Math.abs(target.getX() - x - width / 2 + TILE_SIZE / 2);
+        float yDistanceFromTarget = Math.abs(target.getY() - y - height / 2 + TILE_SIZE / 2);
         float totalDistanceFromTarget = xDistanceFromTarget + yDistanceFromTarget;
         float xPercentOfMovement = xDistanceFromTarget / totalDistanceFromTarget;
         xVelocity = xPercentOfMovement;
@@ -56,14 +56,14 @@ public abstract class Projectile implements Entity {
         alive = false;
     }
 
-    public void checkingHitting(){
+    public void checkingHitting() {
         if (checkCollision(x, y, width, height,
                 target.getX(), target.getY(), target.getWidth(), target.getHeight())) {
             damage();
         }
     }
 
-    public void autoAiming(){
+    public void autoAiming() {
         calculateDirection();
     }
 

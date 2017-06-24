@@ -10,16 +10,16 @@ import static Helpers.Artist.*;
 public enum TowerType {
 
     CannonPurple(new Texture[]{quickLoad("Towers\\towerBase"), quickLoad("Towers\\towerPurpleGun")},
-            ProjectileType.Rocket, TILE_SIZE * 3.5f, 1.5f, 15),
+            ProjectileType.Rocket, TILE_SIZE * 3.1f, 1.5f, 22),
 
     CannonIce(new Texture[]{quickLoad("Towers\\cannonBaseBlue"), quickLoad("Towers\\cannonGunBlue")},
-            ProjectileType.IceBall, TILE_SIZE * 2.5f, 1.5f, 20),
+            ProjectileType.IceBall, TILE_SIZE * 2.5f, 1.75f, 18),
 
     FlameThrower(new Texture[]{quickLoad("Towers\\cannonBase"), quickLoad("Towers\\cannonGun")},
-            ProjectileType.Fire, TILE_SIZE * 2.5f, 0.06f, 40),
+            ProjectileType.Fire, TILE_SIZE * 2.4f, 0.06f, 40),
 
     Mortal(new Texture[]{quickLoad("Towers\\towerBase"), quickLoad("Towers\\towerMortalGun"),quickLoad("shuriken")},
-            ProjectileType.Shuriken, TILE_SIZE * 3.8f, 3.2f, 50);
+            ProjectileType.Shuriken, TILE_SIZE * 3.8f, 3.25f, 50);
 
 
     Texture[] textures;
@@ -37,5 +37,9 @@ public enum TowerType {
 
     public int getCost() {
         return cost;
+    }
+
+    public float getRange() {
+        return range;
     }
 }

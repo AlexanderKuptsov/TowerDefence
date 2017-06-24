@@ -16,9 +16,9 @@ public class TowerMortal extends Tower {
 
     private float rotation;
 
-    public TowerMortal(TowerType type, Tile startTile, CopyOnWriteArrayList<Enemy> enemies) {
-        super(type, startTile, enemies);
-        this.rotation = 0;
+    public TowerMortal(TowerType type, CopyOnWriteArrayList<Enemy> enemies) {
+        super(type, enemies);
+        this.rotation = rotation;
     }
 
     @Override

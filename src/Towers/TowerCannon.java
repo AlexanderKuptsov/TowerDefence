@@ -2,6 +2,7 @@ package Towers;
 
 import Data.Enemy;
 import Graphics.Tile;
+import Helpers.MyThread;
 
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -16,11 +17,17 @@ public class TowerCannon extends Tower {
         super(type, startTile, enemies);
     }
 
+    public TowerCannon(TowerType type, CopyOnWriteArrayList<Enemy> enemies) {
+        super(type, enemies);
+    }
+
     @Override
     public void shoot(Enemy target) {
         super.projectiles.add(new ProjectileRocket(super.type.projectileType, super.target,
                 super.getX() + TILE_SIZE / 2 - TILE_SIZE / 2,
                 super.getY() + TILE_SIZE / 2 - TILE_SIZE / 2, TILE_SIZE, TILE_SIZE));
-    }
 
+       // Thread soundThread = new MyThread();
+       // soundThread.start();
+    }
 }

@@ -115,16 +115,16 @@ public class Enemy implements Entity {
 
                 if (checkpoints.get(currentCheckpoint).getXDirection() == 1) {
                     texture = enemyRight;
-                    angle = 180;
+                    if (enemyType == EnemyType.Tank) angle = 180;
                 } else if (checkpoints.get(currentCheckpoint).getXDirection() == -1) {
                     texture = enemyLeft;
-                    angle = 180;
+                    if (enemyType == EnemyType.Tank) angle = 180;
                 } else if (checkpoints.get(currentCheckpoint).getYDirection() == -1) {
                     texture = enemyUp;
-                    angle = 90;
+                    if (enemyType == EnemyType.Tank) angle = 90;
                 } else if (checkpoints.get(currentCheckpoint).getYDirection() == 1) {
                     texture = enemyDown;
-                    angle = -90;
+                    if (enemyType == EnemyType.Tank) angle = -90;
                 }
 
                 x += Clock.INSTANCE.delta() * checkpoints.get(currentCheckpoint).getXDirection() * speed;
@@ -142,7 +142,7 @@ public class Enemy implements Entity {
         boolean reached = false;
         Tile t = checkpoints.get(currentCheckpoint).getTile();
         // проверка заранее (не доходя немного)
-        final short preGap = 6;
+        final short preGap = (short) (TILE_SIZE / 16);
         if (x > t.getX() - preGap && x < t.getX() + preGap && y > t.getY() - preGap && y < t.getY() + preGap) {
             reached = true;
             x = t.getX();
@@ -160,7 +160,7 @@ public class Enemy implements Entity {
         while (cont) {
             int[] currentDirection = findNextDirection(checkpoints.get(counter).getTile());
             final short noDirection = 2;
-            final short maxAttempts = 20;
+            final short maxAttempts = 30;
             if (currentDirection[0] == noDirection || counter == maxAttempts) { // проверка на существование нового направления/checkpoint
                 cont = false;
             } else {
@@ -241,13 +241,24 @@ public class Enemy implements Entity {
         drawQuadTexture(healthBackGround, x, y - TILE_SIZE / 4, width, healthLabelHeight);
         drawQuadTexture(healthForeGround, x, y - TILE_SIZE / 4, TILE_SIZE * healthPercent, healthLabelHeight);
         drawQuadTexture(healthBorder, x, y - TILE_SIZE / 4, width, healthLabelHeight);
+
         final float lowHealth = 0.3f;
         if (healthPercent < lowHealth) {
-            short deltaYPos = 0;
+           /* int deltaYPos = 0;
             final int deltaXPos = (TILE_SIZE * 3) / 4;
-            if (angle == 90 || angle == -90) deltaYPos = 16;
+            if (angle == 90 || angle == -90) deltaYPos = TILE_SIZE / 4;
             drawQuadTextureRotation(quickLoad("fire"),
-                    x + TILE_SIZE / 2 - deltaXPos, y - TILE_SIZE / 2 + deltaYPos, 96, 96, angle);
+                    x + TILE_SIZE / 2 - deltaXPos, y - TILE_SIZE / 2 + deltaYPos,
+                    (int) (TILE_SIZE * 1.5), (int) (TILE_SIZE * 1.5), angle);
+*/
+
+            int deltaYPos = 0;
+            final int deltaXPos = (TILE_SIZE * 3) / 4;
+            final int size = (int) (TILE_SIZE * 1.5);
+            if (angle == 90 || angle == -90) deltaYPos = TILE_SIZE / 4;
+            drawQuadTextureRotation(quickLoad("fire"),
+                    x + TILE_SIZE / 2 - size / 2, y + TILE_SIZE / 2 - size / 2, size, size, angle);
+
         }
     }
 

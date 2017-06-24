@@ -16,7 +16,7 @@ public class LevelMenu {
     public LevelMenu() {
         background = quickLoad("mainMenu");
         menuUI = new UI();
-        int BUTTON_SIZE = 256;
+        int BUTTON_SIZE = TILE_SIZE * 4;
         menuUI.addButton("Level 1", "1", WIDTH / 2 - BUTTON_SIZE / 2, (int) (HEIGHT * 0.05f),
                 BUTTON_SIZE, BUTTON_SIZE);
         menuUI.addButton("Level 2", "2", WIDTH / 2 - BUTTON_SIZE / 2, (int) (HEIGHT * 0.35f),
@@ -30,7 +30,7 @@ public class LevelMenu {
 
     private void updateButtons() {
         if (menuUI.isButtonClicked("Level 1")) {
-            StateManager.INSTANCE.setMapName("src\\res\\maps\\newMarvelousMap1");
+            StateManager.INSTANCE.setMapName("res\\maps\\newMarvelousMap1");
             StateManager.INSTANCE.setStartedPlaceX(0);
             StateManager.INSTANCE.setStartedPlaceY(5);
             StateManager.INSTANCE.setStartedMoney(75);
@@ -38,7 +38,7 @@ public class LevelMenu {
             StateManager.INSTANCE.setState(StateManager.GameState.GAME);
         }
         if (menuUI.isButtonClicked("Level 2")) {
-            StateManager.INSTANCE.setMapName("src\\res\\maps\\newMarvelousMap2");
+            StateManager.INSTANCE.setMapName("res\\maps\\newMarvelousMap2");
             StateManager.INSTANCE.setStartedPlaceX(0);
             StateManager.INSTANCE.setStartedPlaceY(5);
             StateManager.INSTANCE.setStartedMoney(80);
@@ -46,7 +46,7 @@ public class LevelMenu {
             StateManager.INSTANCE.setState(StateManager.GameState.GAME);
         }
         if (menuUI.isButtonClicked("Level 3")) {
-            StateManager.INSTANCE.setMapName("src\\res\\maps\\newMarvelousMap3");
+            StateManager.INSTANCE.setMapName("res\\maps\\newMarvelousMap3");
             StateManager.INSTANCE.setStartedPlaceX(0);
             StateManager.INSTANCE.setStartedPlaceY(2);
             StateManager.INSTANCE.setStartedMoney(100);

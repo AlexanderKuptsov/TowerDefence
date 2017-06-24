@@ -5,6 +5,7 @@ import Helpers.StateManager;
 import org.lwjgl.opengl.Display;
 
 import static Helpers.Artist.BeginSession;
+import static Helpers.Artist.*;
 
 /**
  * Created by shurik on 28.04.2017.

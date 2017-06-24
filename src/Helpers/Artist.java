@@ -12,6 +12,7 @@ import java.io.InputStream;
 
 import static Main.Game.Cash;
 import static Main.Game.Lives;
+import static java.lang.Math.*;
 import static org.lwjgl.opengl.GL11.*;
 
 /**
@@ -19,19 +20,37 @@ import static org.lwjgl.opengl.GL11.*;
  */
 public class Artist {
 
-    public static final int WIDTH = 1472, HEIGHT = 960, TILE_SIZE = 64;
+    private static final int DESKTOP_WIDTH = Display.getDesktopDisplayMode().getWidth();
+    private static final int DESKTOP_HEIGHT = Display.getDesktopDisplayMode().getHeight();
+
+    private static final double ratioW = DESKTOP_WIDTH / 1472.0;
+    private static final double ratioH = DESKTOP_HEIGHT / 960.0;
+
+    private static final int TILES_IN_W = 23, TILES_IN_H = 15;
+
+    public static int TILE_SIZE = ratioW >= 1 && ratioH >= 1 ? 64 : (int) (64 * Math.min(ratioW, ratioH));
+    public static int WIDTH = TILES_IN_W * TILE_SIZE;
+    public static int HEIGHT = TILES_IN_H * TILE_SIZE;
 
     public static void BeginSession() {
         Display.setTitle("Uncrackable Defence");
+
+        System.out.println("DesktopDisplayMode: " + DESKTOP_WIDTH + "  " + DESKTOP_HEIGHT);
+        System.out.println("ratio: " + ratioW + "  " + ratioH);
+        System.out.println("DisplayMode: " + WIDTH + "  " + HEIGHT);
+        System.out.println("TileSize: " + TILE_SIZE);
+
         try {
             Display.setDisplayMode(new DisplayMode(WIDTH, HEIGHT));
-            Display.setLocation(Display.getDesktopDisplayMode().getWidth() / 2 - WIDTH / 2, 0);
+            Display.setLocation(DESKTOP_WIDTH / 2 - WIDTH / 2, 0);
             Display.create();
             Display.setVSyncEnabled(true);
             Display.swapBuffers();
+            Display.setResizable(true);
         } catch (LWJGLException e) {
             e.printStackTrace();
         }
+
         // setup for 2D
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();

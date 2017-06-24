@@ -2,6 +2,8 @@ package Helpers;
 
 import org.lwjgl.Sys;
 
+import static Helpers.Artist.TILE_SIZE;
+
 /**
  * Created by shurik on 29.04.2017.
  */
@@ -11,6 +13,7 @@ public enum Clock {
     private boolean paused = false;
     private long lastFrame, totalTime;
     private float deltaTime = 0, multiplier = 1;
+    private final float ratio = (float) (TILE_SIZE / 64.0);
 
     private long getTime() {
         return Sys.getTime() * 1000 / Sys.getTimerResolution();
@@ -35,7 +38,7 @@ public enum Clock {
     }
 
     public float multiplier() {
-        return multiplier;
+        return multiplier * ratio;
     }
 
     public void update() {
@@ -53,5 +56,9 @@ public enum Clock {
 
     private void pause() {
         paused = !paused;
+    }
+
+    public void setMultiplier(float multiplier) {
+        this.multiplier = multiplier;
     }
 }

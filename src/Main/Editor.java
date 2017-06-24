@@ -24,18 +24,18 @@ public class Editor {
     private UI editorUI;
     private Menu tilePickerMenu;
 
-    private static final int TILE_PICKER_MENU_X = 1280;
-    private static final int TILE_PICKER_MENU_Y = 0;
-    private static final int TILE_PICKER_MENU_WIDTH = 192;
-    private static final int TILE_PICKER_MENU_HEIGHT = 960;
+    private static final int TILE_PICKER_MENU_WIDTH = 3 * TILE_SIZE;
+    private static final int TILE_PICKER_MENU_HEIGHT = HEIGHT;
+    private static final int TILE_PICKER_MENU_X = WIDTH - TILE_PICKER_MENU_WIDTH;
+    private static final int TILE_PICKER_MENU_Y = HEIGHT - TILE_PICKER_MENU_HEIGHT;
     private static final int MAX_TILES_IN_ROW = 2;
 
-    private static final int QUITE_BUTTON_X = 1334;
-    private static final int QUITE_BUTTON_Y = 825;
-    private static final int QUITE_BUTTON_WIDTH = 80;
-    private static final int QUITE_BUTTON_HEIGHT = 80;
+    private static final int QUITE_BUTTON_WIDTH = (int) (TILE_SIZE * 1.25);
+    private static final int QUITE_BUTTON_HEIGHT = (int) (TILE_SIZE * 1.25);
+    private static final int QUITE_BUTTON_X = WIDTH - TILE_PICKER_MENU_WIDTH / 2 - QUITE_BUTTON_WIDTH / 2;
+    private static final int QUITE_BUTTON_Y = HEIGHT - 2 * TILE_SIZE;
 
-    private static final int TEXT_X = 1345;
+    private static final int TEXT_X = WIDTH - TILE_PICKER_MENU_WIDTH + TILE_SIZE / 2;
     private static final int TEXT_Y = 50;
 
     private static final int BACKGROUND_WIDTH = 2048;
@@ -43,7 +43,7 @@ public class Editor {
 
 
     public Editor() {
-        this.background = quickLoad("mainmenu");
+        this.background = quickLoad("mainMenu");
         this.menuBackground = quickLoad("menuBackgroundEditor");
         this.grid = new TileGrid();
         this.type = TileType.Grass;

@@ -29,7 +29,7 @@ public enum StateManager {
     private int startedPlaceY = 5;
     private int startedMoney = 75;
     private int startedLives = 5;
-    private String mapName = "newMarvelousMap1";
+    private String mapName = "res\\maps\\newMarvelousMap1";
 
     public void update() {
         switch (gameState) {

@@ -19,7 +19,7 @@ public enum EnemyType {
 
     UFO(quickLoad("UFO2"), quickLoad("UFO2"),
             quickLoad("UFO2"), quickLoad("UFO2"),
-            35, 135, 8);
+            35, 150, 8);
 
     private Texture texture, textureLeft, textureUp, textureDown;
     private int speed, health, earnings;

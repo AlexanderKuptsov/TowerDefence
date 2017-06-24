@@ -9,6 +9,7 @@ import org.newdawn.slick.opengl.Texture;
 import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import static Helpers.Artist.TILE_SIZE;
 import static Helpers.Artist.drawQuadTexture;
 import static Helpers.Artist.drawQuadTextureRotation;
 
@@ -44,6 +45,22 @@ public abstract class Tower implements Entity {
         this.projectiles = new ArrayList<Projectile>();
     }
 
+    public Tower(TowerType type, CopyOnWriteArrayList<Enemy> enemies) {
+        this.type = type;
+        this.textures = type.textures;
+        this.width = TILE_SIZE;
+        this.height = TILE_SIZE;
+        this.cost = type.cost;
+        this.range = type.range;
+        this.firingRate = type.firingRate;
+        this.targeted = false;
+        this.working = true;
+        this.timeSinceLastShot = 0;
+        this.angle = 0f;
+        this.enemies = enemies;
+        this.projectiles = new ArrayList<Projectile>();
+    }
+
     private Enemy acquireTarget() {
         Enemy closest = null;
         float closestDistance = 3000;
@@ -58,9 +75,9 @@ public abstract class Tower implements Entity {
     }
 
     private boolean isInRange(Enemy e) {
-        float xDistance = Math.abs(e.getX() - x);
-        float yDistance = Math.abs(e.getY() - y);
-        return Math.sqrt(Math.pow(xDistance, 2) + Math.pow(yDistance, 2)) < range;
+        float xDistance = Math.abs(e.getX() + e.getWidth() / 2 - (x + TILE_SIZE / 2));
+        float yDistance = Math.abs(e.getY() + e.getHeight() / 2 - (y + TILE_SIZE / 2));
+        return Math.sqrt(Math.pow(xDistance, 2) + Math.pow(yDistance, 2)) < range + TILE_SIZE / 2;
     }
 
     private float findDistance(Enemy e) {
@@ -98,7 +115,7 @@ public abstract class Tower implements Entity {
             timeSinceLastShot += Clock.INSTANCE.delta();
 
             for (Projectile p : projectiles) p.update();
-            if (target != null && !target.isAlive()) projectiles.clear();
+            if (target != null && !target.isAlive() && type != TowerType.Mortal) projectiles.clear();
 
             draw();
         }
@@ -170,5 +187,9 @@ public abstract class Tower implements Entity {
 
     public int getCost() {
         return cost;
+    }
+
+    public float getRange() {
+        return range;
     }
 }

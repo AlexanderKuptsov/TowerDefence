@@ -56,11 +56,12 @@ public class Wave {
     private void spawn() {
         //  enemyList.add(new Enemy(enemyType.getTexture(), enemyType.getStartTile(), enemyType.getTileGrid(),
         //          enemyType.getWidth(), enemyType.getHeight(), enemyType.getSpeed(), enemyType.getHealth()));
-        Enemy enemy=new Enemy(enemyTypes[chosenEnemy].getEnemyType(), (int) (enemyTypes[chosenEnemy].getX() / TILE_SIZE),
+        Enemy enemy = new Enemy(enemyTypes[chosenEnemy].getEnemyType(), (int) (enemyTypes[chosenEnemy].getX() / TILE_SIZE),
                 (int) (enemyTypes[chosenEnemy].getY() / TILE_SIZE), enemyTypes[chosenEnemy].getGrid());
-        enemy.setHealth(enemy.getHealth()*difficultyMulti);
+        enemy.setHealth(enemy.getHealth() * difficultyMulti);
         enemy.setStartHealth(enemy.getHealth());
         enemyList.add(enemy);
+        System.out.println("Enemy health: " + enemy.getHealth());
         chosenEnemy++;
         if (chosenEnemy == 3) chosenEnemy = 0;
         enemiesSpawned++;

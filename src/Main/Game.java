@@ -2,6 +2,7 @@ package Main;
 
 import Data.*;
 import Graphics.TileGrid;
+import Helpers.Clock;
 import Helpers.LevelManager;
 import Helpers.StateManager;
 import Towers.*;
@@ -29,16 +30,21 @@ public class Game {
 
     private static final int NUMBER_OF_WAVES = 5;
 
-    private static final int TOWER_PICKER_MENU_X = 1280;
-    private static final int TOWER_PICKER_MENU_Y = 0;
-    private static final int TOWER_PICKER_MENU_WIDTH = 192;
-    private static final int TOWER_PICKER_MENU_HEIGHT = 960;
+    private static final int TOWER_PICKER_MENU_WIDTH = 3 * TILE_SIZE;
+    private static final int TOWER_PICKER_MENU_HEIGHT = HEIGHT;
+    private static final int TOWER_PICKER_MENU_X = WIDTH - TOWER_PICKER_MENU_WIDTH;
+    private static final int TOWER_PICKER_MENU_Y = HEIGHT - TOWER_PICKER_MENU_HEIGHT;
     private static final int MAX_TOWERS_IN_ROW = 2;
-    private static final int QUITE_BUTTON_X = 1334;
-    private static final int QUITE_BUTTON_Y = 825;
-    private static final int QUITE_BUTTON_WIDTH = 80;
-    private static final int QUITE_BUTTON_HEIGHT = 80;
 
+    private static final int QUITE_BUTTON_WIDTH = (int) (TILE_SIZE * 1.25);
+    private static final int QUITE_BUTTON_HEIGHT = (int) (TILE_SIZE * 1.25);
+    private static final int QUITE_BUTTON_X = WIDTH - TOWER_PICKER_MENU_WIDTH / 2 - QUITE_BUTTON_WIDTH / 2;
+    private static final int QUITE_BUTTON_Y = HEIGHT - 2 * TILE_SIZE;
+
+    private static final int CANCEL_WIDTH = TILE_SIZE;
+    private static final int CANCEL_HEIGHT = TILE_SIZE;
+    private static final int CANCEL_X = WIDTH - TOWER_PICKER_MENU_WIDTH / 2 - CANCEL_WIDTH / 2;
+    private static final int CANCEL_Y = TILE_SIZE * 5;
 
     public Game(String mapName, int startedPlaceX, int startedPlaceY, int startedMoney, int startedLives) {
         this.startedPlaceX = startedPlaceX;
@@ -46,22 +52,23 @@ public class Game {
         this.startedMoney = startedMoney;
         this.startedLives = startedLives;
 
-        //grid = new TileGrid(map);
-        grid = LevelManager.INSTANCE.loadMap(mapName);
+        // grid = LevelManager.INSTANCE.loadMap(mapName);
+        grid = LevelManager.INSTANCE.setMap(mapName);
+
         enemyTypes = new Enemy[3];
         enemyTypes[0] = new EnemyTank(EnemyType.Tank, startedPlaceX, startedPlaceY, grid);
         enemyTypes[1] = new EnemyUFO(EnemyType.UFO, startedPlaceX, startedPlaceY, grid);
         enemyTypes[2] = new EnemyPlane(EnemyType.Plane, startedPlaceX, startedPlaceY, grid);
 
         switch (mapName) {
-            case "src\\res\\maps\\newMarvelousMap1":
+            case "res\\maps\\newMarvelousMap1":
                 waveManager = new WaveManager(enemyTypes, 3, 8, 1.25f);
                 break;
-            case "src\\res\\maps\\newMarvelousMap2":
+            case "res\\maps\\newMarvelousMap2":
                 waveManager = new WaveManager(enemyTypes, 2, 9, 1.3f);
                 break;
-            case "src\\res\\maps\\newMarvelousMap3":
-                waveManager = new WaveManager(enemyTypes, 1.2f, 15, 1.5f);
+            case "res\\maps\\newMarvelousMap3":
+                waveManager = new WaveManager(enemyTypes, 1.2f, 15, 1.75f);
                 break;
             default:
                 waveManager = new WaveManager(enemyTypes, 3, 8, 1.25f);
@@ -93,14 +100,19 @@ public class Game {
 
         gameUI.addButton("Quit", "menu",
                 QUITE_BUTTON_X, QUITE_BUTTON_Y, QUITE_BUTTON_WIDTH, QUITE_BUTTON_HEIGHT);
+
+       /* gameUI.addButton("cancel", "cancel",
+                CANCEL_X, CANCEL_Y, CANCEL_WIDTH, CANCEL_HEIGHT);*/
+        gameUI.addButton("cancelActive", "cancelActive",
+                CANCEL_X, CANCEL_Y, CANCEL_WIDTH, CANCEL_HEIGHT);
     }
 
     private void updateUI() {
         gameUI.draw();
-        final int TEXT_X = 1310;
-        final int TEXT_Y = 625;
-        final int TEXT_GAP = 50;
-        final int COST_X_DELTA = TILE_SIZE / 8;
+        final int TEXT_X = WIDTH - TOWER_PICKER_MENU_WIDTH + TILE_SIZE / 2;
+        final int TEXT_Y = (int) (0.6 * HEIGHT);
+        final int TEXT_GAP = (int) (0.8 * TILE_SIZE);
+        final int COST_X_DELTA = (int) (TILE_SIZE * 0.2);
 
         gameUI.drawString(TEXT_X, TEXT_Y, "Lives: " + Lives);
         gameUI.drawString(TEXT_X, TEXT_Y + TEXT_GAP, "Cash: " + Cash + " $");
@@ -108,33 +120,31 @@ public class Game {
         gameUI.drawString(TEXT_X, TEXT_Y + TEXT_GAP * 3, StateManager.INSTANCE.getFramesInLastSecond() + " fps");
 
         gameUI.drawString(gameUI.getMenu("TowerPicker").getButton("TowerIce").getX() + COST_X_DELTA,
-                gameUI.getMenu("TowerPicker").getButton("TowerIce").getY() + TILE_SIZE,
+                gameUI.getMenu("TowerPicker").getButton("TowerIce").getY() + (int) (TILE_SIZE * 1.15),
                 TowerType.CannonIce.getCost() + " $");
         gameUI.drawString(gameUI.getMenu("TowerPicker").getButton("FlameThrower").getX() + COST_X_DELTA,
-                gameUI.getMenu("TowerPicker").getButton("FlameThrower").getY() + TILE_SIZE,
+                gameUI.getMenu("TowerPicker").getButton("FlameThrower").getY() + (int) (TILE_SIZE * 1.15),
                 TowerType.FlameThrower.getCost() + " $");
         gameUI.drawString(gameUI.getMenu("TowerPicker").getButton("TowerCannonPurple").getX() + COST_X_DELTA,
-                gameUI.getMenu("TowerPicker").getButton("TowerCannonPurple").getY() + TILE_SIZE,
+                gameUI.getMenu("TowerPicker").getButton("TowerCannonPurple").getY() + (int) (TILE_SIZE * 1.15),
                 TowerType.CannonPurple.getCost() + " $");
         gameUI.drawString(gameUI.getMenu("TowerPicker").getButton("Mortal").getX() + COST_X_DELTA,
-                gameUI.getMenu("TowerPicker").getButton("Mortal").getY() + TILE_SIZE,
+                gameUI.getMenu("TowerPicker").getButton("Mortal").getY() + (int) (TILE_SIZE * 1.15),
                 TowerType.Mortal.getCost() + " $");
 
         if (Mouse.next()) {
             boolean mouseClicked = Mouse.isButtonDown(0);
             if (mouseClicked) {
                 if (towerPickerMenu.isButtonClicked("TowerIce"))
-                    player.pickTower(new TowerIce(TowerType.CannonIce, grid.getTile(0, 0),
-                            waveManager.getCurrentWave().getEnemies()));
+                    player.pickTower(new TowerIce(TowerType.CannonIce, waveManager.getCurrentWave().getEnemies()));
                 if (towerPickerMenu.isButtonClicked("FlameThrower"))
-                    player.pickTower(new TowerFlameThrower(TowerType.FlameThrower, grid.getTile(0,
-                            0), waveManager.getCurrentWave().getEnemies()));
+                    player.pickTower(new TowerFlameThrower(TowerType.FlameThrower, waveManager.getCurrentWave().getEnemies()));
                 if (towerPickerMenu.isButtonClicked("TowerCannonPurple"))
-                    player.pickTower(new TowerCannon(TowerType.CannonPurple, grid.getTile(0, 0),
-                            waveManager.getCurrentWave().getEnemies()));
+                    player.pickTower(new TowerCannon(TowerType.CannonPurple, waveManager.getCurrentWave().getEnemies()));
                 if (towerPickerMenu.isButtonClicked("Mortal"))
-                    player.pickTower(new TowerMortal(TowerType.Mortal, grid.getTile(0, 0),
-                            waveManager.getCurrentWave().getEnemies()));
+                    player.pickTower(new TowerMortal(TowerType.Mortal, waveManager.getCurrentWave().getEnemies()));
+
+                if (gameUI.isButtonClicked("cancelActive")) player.setHoldingTower(false);
 
                 if (gameUI.isButtonClicked("Quit")) {
                     Restart();
@@ -142,7 +152,6 @@ public class Game {
                 }
             }
         }
-        drawQuadTexture(grid.getTile(0, 0).getTexture(), 0, 0, TILE_SIZE, TILE_SIZE);
     }
 
     private void Restart() {
@@ -151,8 +160,8 @@ public class Game {
         waveManager.restartEnemies();
         player.cleanProjectiles();
         player.getTowerList().clear();
+        Clock.INSTANCE.setMultiplier(1);
     }
-
 
     public void update() {
         drawQuadTexture(menuBackground, TOWER_PICKER_MENU_X, TOWER_PICKER_MENU_Y,

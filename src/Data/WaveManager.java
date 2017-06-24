@@ -30,8 +30,8 @@ public class WaveManager {
     public void update() {
         if (!currentWave.isCompleted()) currentWave.update();
         else {
-            enemiesPerWave += 2;
-            modifyCash(5 * waveNumber);
+            enemiesPerWave += 3;
+            modifyCash(5 + waveNumber / 2);
             newWave();
         }
     }

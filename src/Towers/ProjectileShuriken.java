@@ -43,7 +43,7 @@ public class ProjectileShuriken extends Projectile {
     @Override
     public void update() {
         super.update();
-        if (super.getX() > WIDTH || super.getY() > HEIGHT) super.setAlive(false);
+        if (super.getX() > WIDTH - 4 * TILE_SIZE || super.getY() > HEIGHT) super.setAlive(false);
     }
 
     public void draw() {

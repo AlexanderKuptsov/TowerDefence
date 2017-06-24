@@ -7,6 +7,7 @@ import Towers.Tower;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
+import java.awt.Graphics;
 import java.util.ArrayList;
 
 import static Helpers.Artist.*;
@@ -36,10 +37,17 @@ public class Player {
 
     public void update() {
         //Update holding tower
-        if (holdingTower) {
-            tempTower.setX(getMouseTile().getX());
-            tempTower.setY(getMouseTile().getY());
+        if (holdingTower && Mouse.getX() < 1280) {
+            float x = getMouseTile().getX();
+            float y = getMouseTile().getY();
+            float radius = tempTower.getRange();
+            float diameter = 2 * radius;
+            float rangeX = x - radius + TILE_SIZE / 2;
+            float rangeY = y - radius + TILE_SIZE / 2;
+            tempTower.setX(x);
+            tempTower.setY(y);
             tempTower.draw();
+            drawQuadTexture(quickLoad("range"), rangeX, rangeY, diameter, diameter);
         }
 
         for (Tower t : towerList) {
@@ -91,9 +99,10 @@ public class Player {
     private void sellTower(Tile mouseTile) {
         for (Tower t : towerList) {
             if (t.getX() / TILE_SIZE == mouseTile.getX() / TILE_SIZE &&
-                    t.getY() / TILE_SIZE == mouseTile.getY() / TILE_SIZE)
+                    t.getY() / TILE_SIZE == mouseTile.getY() / TILE_SIZE && t.isWorking()) {
                 t.setWorking(false);
-            modifyCash((int) (t.getCost() * 0.5f));
+                modifyCash((int) (t.getCost() * 0.5f));
+            }
         }
     }
 
@@ -116,5 +125,13 @@ public class Player {
 
     public void cleanProjectiles() {
         for (Tower t : getTowerList()) t.projectiles.clear();
+    }
+
+    public boolean isHoldingTower() {
+        return holdingTower;
+    }
+
+    public void setHoldingTower(boolean holdingTower) {
+        this.holdingTower = holdingTower;
     }
 }

@@ -93,9 +93,9 @@ public class UI {
         }
 
         private void setButton(Button b) {
-            final int FIRST_GAP = 70;
+            final int FIRST_GAP = (int) (TILE_SIZE * 1.15);
             if (optionsWidth != 0)
-                b.setY(y + (numberOfButtons / optionsWidth) * (TILE_SIZE + gap) + gap + FIRST_GAP);
+                b.setY(y + (numberOfButtons / optionsWidth) * ((int) (TILE_SIZE * 1.4) + gap) + gap + FIRST_GAP);
             b.setX(x + (numberOfButtons % 2) * (gap + TILE_SIZE) + gap);
             numberOfButtons++;
             menuButtons.add(b);

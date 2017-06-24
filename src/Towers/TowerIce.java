@@ -12,8 +12,8 @@ import static Helpers.Artist.TILE_SIZE;
  */
 public class TowerIce extends Tower {
 
-    public TowerIce(TowerType type, Tile startTile, CopyOnWriteArrayList<Enemy> enemies) {
-        super(type, startTile, enemies);
+    public TowerIce(TowerType type, CopyOnWriteArrayList<Enemy> enemies) {
+        super(type, enemies);
     }
 
     @Override

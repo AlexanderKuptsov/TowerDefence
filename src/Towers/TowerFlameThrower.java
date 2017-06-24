@@ -11,8 +11,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 public class TowerFlameThrower extends Tower {
 
-    public TowerFlameThrower(TowerType type, Tile startTile, CopyOnWriteArrayList<Enemy> enemies) {
-        super(type, startTile, enemies);
+    public TowerFlameThrower(TowerType type, CopyOnWriteArrayList<Enemy> enemies) {
+        super(type, enemies);
     }
 
     @Override
