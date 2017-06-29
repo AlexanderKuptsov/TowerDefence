@@ -229,7 +229,7 @@ public class Enemy implements Entity {
         }
     }
 
-    private void die() {
+    void die() {
         alive = false;
         checkpoints.clear();
         directions = null;

@@ -42,4 +42,8 @@ public enum TowerType {
     public float getRange() {
         return range;
     }
+
+    public ProjectileType getProjectileType() {
+        return projectileType;
+    }
 }

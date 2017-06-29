@@ -5,6 +5,8 @@ import org.newdawn.slick.TrueTypeFont;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import static Helpers.Artist.*;
 
@@ -15,18 +17,25 @@ public class UI {
 
     private ArrayList<Button> buttonList;
     private ArrayList<Menu> menuList;
+    private Map<Point, String> textMap;
     private TrueTypeFont font;
     private Font awtFont;
 
     public UI() {
-        buttonList = new ArrayList<Button>();
-        menuList = new ArrayList<Menu>();
-        awtFont = new Font("Algerian", Font.ITALIC, 22);
-        font = new TrueTypeFont(awtFont, false);
+        this.buttonList = new ArrayList<Button>();
+        this.menuList = new ArrayList<Menu>();
+        this.textMap = new HashMap<Point, String>();
+        this.awtFont = new Font("Algerian", Font.BOLD, 21);
+        this.font = new TrueTypeFont(awtFont, false);
     }
 
     public void drawString(int x, int y, String text) {
         font.drawString(x, y, text);
+    }
+
+    public void addText(int x, int y, String text) {
+        Point point = new Point(x, y);
+        textMap.put(point, text);
     }
 
     public void addButton(String name, String textureName, int x, int y, int width, int height) {
@@ -62,6 +71,12 @@ public class UI {
     public void draw() {
         for (Button b : buttonList) drawQuadTexture(b.getTexture(), b.getX(), b.getY(), b.getWidth(), b.getHeight());
         for (Menu m : menuList) m.draw();
+        for (Map.Entry<Point, String> text : textMap.entrySet())
+            drawString(text.getKey().x, text.getKey().y, text.getValue());
+    }
+
+    public boolean isEmpty() {
+        return buttonList.isEmpty() && menuList.isEmpty();
     }
 
     public class Menu {
@@ -126,5 +141,17 @@ public class UI {
         public String getName() {
             return name;
         }
+    }
+
+    public ArrayList<Button> getButtonList() {
+        return buttonList;
+    }
+
+    public ArrayList<UI.Menu> getMenuList() {
+        return menuList;
+    }
+
+    public Map<Point, String> getTextMap() {
+        return textMap;
     }
 }

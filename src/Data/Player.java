@@ -4,14 +4,15 @@ import Graphics.Tile;
 import Graphics.TileGrid;
 import Helpers.Clock;
 import Towers.Tower;
+import UI.UI;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
-import java.awt.Graphics;
 import java.util.ArrayList;
 
 import static Helpers.Artist.*;
 import static Main.Game.Cash;
+import static Main.Game.TOWER_PICKER_MENU_WIDTH;
 
 /**
  * Created by shurik on 29.04.2017.
@@ -21,9 +22,14 @@ public class Player {
     private TileGrid grid;
     private WaveManager waveManager;
     private ArrayList<Tower> towerList;
-    private boolean leftMouseButtonDown, rightMouseButtonDown, holdingTower;
+    private boolean leftMouseButtonDown, rightMouseButtonDown, mouseClicked, holdingTower;
     private Tower tempTower;
+    private UI optionsUI;
+    private Tile chosenTile;
 
+    private float upgradeMultiCost, upgradeMulti, sellMultiCost;
+
+    private final int GAME_WIDTH = WIDTH - TOWER_PICKER_MENU_WIDTH;
 
     public Player(TileGrid grid, WaveManager waveManager) {
         this.grid = grid;
@@ -31,13 +37,19 @@ public class Player {
         this.towerList = new ArrayList<Tower>();
         this.leftMouseButtonDown = true;
         this.rightMouseButtonDown = false;
+        this.mouseClicked = true;
         this.holdingTower = false;
         this.tempTower = null;
+        this.optionsUI = new UI();
+        this.chosenTile = null;
+        this.upgradeMultiCost = 0.7f;
+        this.upgradeMulti = 1.4f;
+        this.sellMultiCost = 0.5f;
     }
 
     public void update() {
         //Update holding tower
-        if (holdingTower && Mouse.getX() < 1280) {
+        if (holdingTower && Mouse.getX() < GAME_WIDTH) {
             float x = getMouseTile().getX();
             float y = getMouseTile().getY();
             float radius = tempTower.getRange();
@@ -55,6 +67,8 @@ public class Player {
             t.updateEnemyList(waveManager.getCurrentWave().getEnemies());
         }
 
+        updateUI();
+
         // Mouse Input
         // свободна ли клетка
         boolean possibleToBuild = getMouseTile().getType().isBuildable() && isPlaceFree(getMouseTile());
@@ -62,7 +76,8 @@ public class Player {
             placeTower();
         }
         if (Mouse.isButtonDown(1) && !leftMouseButtonDown && !isPlaceFree(getMouseTile())) {
-            sellTower(getMouseTile());
+            if (optionsUI.getButtonList().isEmpty()) createOptionMenu();
+            else deleteOptionMenu();
         }
 
         leftMouseButtonDown = Mouse.isButtonDown(1);
@@ -83,6 +98,21 @@ public class Player {
         if (waveManager.getCurrentWave().isCompleted()) cleanProjectiles();
     }
 
+    private void updateUI() {
+        optionsUI.draw();
+
+        if (!mouseClicked && !optionsUI.isEmpty()) {
+            if (optionsUI.isButtonClicked("Upgrade")) {
+                upgradeTower(chosenTile);
+                deleteOptionMenu();
+            } else if (optionsUI.isButtonClicked("Sell")) {
+                sellTower(chosenTile);
+                deleteOptionMenu();
+            }
+        }
+        mouseClicked = Mouse.isButtonDown(0);
+    }
+
     private void placeTower() {
         if (holdingTower)
             if (modifyCash(-tempTower.getCost()))
@@ -97,13 +127,56 @@ public class Player {
     }
 
     private void sellTower(Tile mouseTile) {
+        Tower t = findTower(mouseTile);
+        t.setWorking(false);
+        modifyCash((int) (t.getCost() * sellMultiCost));
+    }
+
+    private void upgradeTower(Tile mouseTile) {
+        Tower t = findTower(mouseTile);
+        if (modifyCash((int) (-(t.getCost() * upgradeMultiCost + (t.getLevel() - 1) * 0.2 * t.getCost())))) {
+            t.getType().getProjectileType().setDamage((upgradeMulti * t.getType().getProjectileType().getDamage()));
+            t.setLevel(t.getLevel() + 1);
+        }
+    }
+
+    private Tower findTower(Tile mouseTile) {
+        Tower tower = null;
         for (Tower t : towerList) {
             if (t.getX() / TILE_SIZE == mouseTile.getX() / TILE_SIZE &&
-                    t.getY() / TILE_SIZE == mouseTile.getY() / TILE_SIZE && t.isWorking()) {
-                t.setWorking(false);
-                modifyCash((int) (t.getCost() * 0.5f));
-            }
+                    t.getY() / TILE_SIZE == mouseTile.getY() / TILE_SIZE && t.isWorking())
+                tower = t;
         }
+        return tower;
+    }
+
+    private void createOptionMenu() {
+        final int OPTION_MENU_SIZE = (int) (0.9 * TILE_SIZE);
+        final int OPTION_MENU_Y = getMouseTile().getYPlace() != 0 ?
+                (int) (getMouseTile().getY() - TILE_SIZE / 2) : (int) (getMouseTile().getY() + 0.8 * TILE_SIZE);
+        final int OPTION_MENU_X1 = (int) getMouseTile().getX() - OPTION_MENU_SIZE / 3;
+        final int OPTION_MENU_X2 = (int) getMouseTile().getX() + TILE_SIZE - OPTION_MENU_SIZE / 2;
+        chosenTile = getMouseTile();
+        Tower t = findTower(chosenTile);
+        int towerCost = t.getCost();
+
+        optionsUI.addText((int) t.getX(), (int) (t.getY() + 0.8 * TILE_SIZE), " Lvl " + t.getLevel());
+
+        optionsUI.addButton("Upgrade", "upgrade",
+                OPTION_MENU_X1, OPTION_MENU_Y, OPTION_MENU_SIZE, OPTION_MENU_SIZE);
+        optionsUI.addText(OPTION_MENU_X1, OPTION_MENU_Y + TILE_SIZE / 2,
+                "-" + (int) (upgradeMultiCost * towerCost + (t.getLevel() - 1) * 0.2 * towerCost) + "$");
+
+        optionsUI.addButton("Sell", "sell",
+                OPTION_MENU_X2, OPTION_MENU_Y, OPTION_MENU_SIZE, OPTION_MENU_SIZE);
+        optionsUI.addText(OPTION_MENU_X2, OPTION_MENU_Y + TILE_SIZE / 2,
+                "+" + (int) (sellMultiCost * towerCost) + "$");
+    }
+
+    private void deleteOptionMenu() {
+        optionsUI.getButtonList().clear();
+        optionsUI.getTextMap().clear();
+        chosenTile = null;
     }
 
     private Tile getMouseTile() {

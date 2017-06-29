@@ -30,7 +30,7 @@ public class Game {
 
     private static final int NUMBER_OF_WAVES = 5;
 
-    private static final int TOWER_PICKER_MENU_WIDTH = 3 * TILE_SIZE;
+    public static final int TOWER_PICKER_MENU_WIDTH = 3 * TILE_SIZE;
     private static final int TOWER_PICKER_MENU_HEIGHT = HEIGHT;
     private static final int TOWER_PICKER_MENU_X = WIDTH - TOWER_PICKER_MENU_WIDTH;
     private static final int TOWER_PICKER_MENU_Y = HEIGHT - TOWER_PICKER_MENU_HEIGHT;
@@ -55,10 +55,11 @@ public class Game {
         // grid = LevelManager.INSTANCE.loadMap(mapName);
         grid = LevelManager.INSTANCE.setMap(mapName);
 
-        enemyTypes = new Enemy[3];
-        enemyTypes[0] = new EnemyTank(EnemyType.Tank, startedPlaceX, startedPlaceY, grid);
+        enemyTypes = new Enemy[4];
+        enemyTypes[2] = new EnemyTank(EnemyType.Tank, startedPlaceX, startedPlaceY, grid);
         enemyTypes[1] = new EnemyUFO(EnemyType.UFO, startedPlaceX, startedPlaceY, grid);
-        enemyTypes[2] = new EnemyPlane(EnemyType.Plane, startedPlaceX, startedPlaceY, grid);
+        enemyTypes[0] = new EnemyBigTank(EnemyType.BigTank, startedPlaceX, startedPlaceY, grid);
+        enemyTypes[3] = new EnemyPlane(EnemyType.Plane, startedPlaceX, startedPlaceY, grid);
 
         switch (mapName) {
             case "res\\maps\\newMarvelousMap1":

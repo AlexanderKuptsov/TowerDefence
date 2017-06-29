@@ -19,7 +19,7 @@ import static Helpers.Artist.drawQuadTextureRotation;
 public abstract class Tower implements Entity {
 
     private float x, y, timeSinceLastShot, range, firingRate, angle;
-    private int width, height, cost;
+    private int width, height, cost, level;
     private CopyOnWriteArrayList<Enemy> enemies;
     private boolean targeted, working;
     public Enemy target;
@@ -37,6 +37,7 @@ public abstract class Tower implements Entity {
         this.cost = type.cost;
         this.range = type.range;
         this.firingRate = type.firingRate;
+        this.level = 1;
         this.targeted = false;
         this.working = true;
         this.timeSinceLastShot = 0;
@@ -53,6 +54,7 @@ public abstract class Tower implements Entity {
         this.cost = type.cost;
         this.range = type.range;
         this.firingRate = type.firingRate;
+        this.level = 1;
         this.targeted = false;
         this.working = true;
         this.timeSinceLastShot = 0;
@@ -191,5 +193,17 @@ public abstract class Tower implements Entity {
 
     public float getRange() {
         return range;
+    }
+
+    public TowerType getType() {
+        return type;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
     }
 }

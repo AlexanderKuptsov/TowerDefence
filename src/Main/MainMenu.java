@@ -34,7 +34,7 @@ public class MainMenu {
             StateManager.INSTANCE.setMapName("res\\maps\\newMarvelousMap1");
             StateManager.INSTANCE.setStartedPlaceX(0);
             StateManager.INSTANCE.setStartedPlaceY(5);
-            StateManager.INSTANCE.setStartedMoney(75);
+            StateManager.INSTANCE.setStartedMoney(80);
             StateManager.INSTANCE.setStartedLives(5);
             StateManager.INSTANCE.setState(StateManager.GameState.GAME);
         }

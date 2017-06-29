@@ -9,7 +9,7 @@ import static Helpers.Artist.quickLoad;
  */
 public enum EnemyType {
 
-    Tank(quickLoad("tankNavy"), quickLoad("tankNavyLEFT"),
+    Tank(quickLoad("tankNavyRIGHT"), quickLoad("tankNavyLEFT"),
             quickLoad("tankNavyUP"), quickLoad("tankNavyDOWN"),
             60, 90, 6),
 
@@ -19,7 +19,11 @@ public enum EnemyType {
 
     UFO(quickLoad("UFO2"), quickLoad("UFO2"),
             quickLoad("UFO2"), quickLoad("UFO2"),
-            35, 150, 8);
+            35, 150, 8),
+
+    BigTank(quickLoad("tank1Right"), quickLoad("tank1Left"),
+            quickLoad("tank1Up"), quickLoad("tank1Down"),
+            50, 110, 7);
 
     private Texture texture, textureLeft, textureUp, textureDown;
     private int speed, health, earnings;

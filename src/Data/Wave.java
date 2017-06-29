@@ -63,7 +63,7 @@ public class Wave {
         enemyList.add(enemy);
         System.out.println("Enemy health: " + enemy.getHealth());
         chosenEnemy++;
-        if (chosenEnemy == 3) chosenEnemy = 0;
+        if (chosenEnemy == enemyTypes.length) chosenEnemy = 0;
         enemiesSpawned++;
     }
 
