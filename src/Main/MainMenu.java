@@ -1,5 +1,6 @@
 package Main;
 
+import Helpers.Sound;
 import Helpers.StateManager;
 import UI.UI;
 
@@ -34,16 +35,23 @@ public class MainMenu {
             StateManager.INSTANCE.setMapName("res\\maps\\newMarvelousMap1");
             StateManager.INSTANCE.setStartedPlaceX(0);
             StateManager.INSTANCE.setStartedPlaceY(5);
-            StateManager.INSTANCE.setStartedMoney(80);
+            StateManager.INSTANCE.setStartedMoney(90);
             StateManager.INSTANCE.setStartedLives(5);
             StateManager.INSTANCE.setState(StateManager.GameState.GAME);
+            Sound.playSound("res\\sounds\\click1.wav");
         }
-        if (menuUI.isButtonClicked("Editor"))
+        if (menuUI.isButtonClicked("Editor")) {
             StateManager.INSTANCE.setState(StateManager.GameState.EDITOR);
-        if (menuUI.isButtonClicked("Quit"))
+            Sound.playSound("res\\sounds\\click1.wav");
+        }
+        if (menuUI.isButtonClicked("Quit")) {
+            Sound.playSound("res\\sounds\\click1.wav");
             System.exit(0);
-        if (menuUI.isButtonClicked("Levels"))
+        }
+        if (menuUI.isButtonClicked("Levels")) {
+            Sound.playSound("res\\sounds\\click1.wav");
             StateManager.INSTANCE.setState(StateManager.GameState.LEVELMENU);
+        }
     }
 
     public void update() {

@@ -9,30 +9,37 @@ import static Helpers.Artist.*;
  */
 public enum TowerType {
 
-    CannonPurple(new Texture[]{quickLoad("Towers\\towerBase"), quickLoad("Towers\\towerPurpleGun")},
-            ProjectileType.Rocket, TILE_SIZE * 3.1f, 1.5f, 22),
+    CannonPurple("Cannon", new Texture[]{quickLoad("Towers\\towerBase"), quickLoad("Towers\\towerPurpleGun")},
+            ProjectileType.Rocket, "boom1.wav", TILE_SIZE * 3.1f, 1.5f, 22),
 
-    CannonIce(new Texture[]{quickLoad("Towers\\cannonBaseBlue"), quickLoad("Towers\\cannonGunBlue")},
-            ProjectileType.IceBall, TILE_SIZE * 2.5f, 1.75f, 18),
+    CannonIce("IceTower", new Texture[]{quickLoad("Towers\\cannonBaseBlue"), quickLoad("Towers\\cannonGunBlue")},
+            ProjectileType.IceBall, "spell1.aif", TILE_SIZE * 2.5f, 1.75f, 18),
 
-    FlameThrower(new Texture[]{quickLoad("Towers\\cannonBase"), quickLoad("Towers\\cannonGun")},
-            ProjectileType.Fire, TILE_SIZE * 2.4f, 0.06f, 40),
+    FlameThrower("FlameThrower", new Texture[]{quickLoad("Towers\\cannonBase"), quickLoad("Towers\\cannonGun")},
+            ProjectileType.Fire, "fire.aif", TILE_SIZE * 2.4f, 0.052f, 40),
 
-    Mortal(new Texture[]{quickLoad("Towers\\towerBase"), quickLoad("Towers\\towerMortalGun"),quickLoad("shuriken")},
-            ProjectileType.Shuriken, TILE_SIZE * 3.8f, 3.25f, 50);
+    Mortal("Mortal", new Texture[]{quickLoad("Towers\\towerBase"), quickLoad("Towers\\towerMortalGun"),
+            quickLoad("shuriken")}, ProjectileType.Shuriken, "blade.wav", TILE_SIZE * 3.8f, 3.28f, 50);
 
-
+    String name, soundName;
     Texture[] textures;
     ProjectileType projectileType;
     int cost;
     float range, firingRate;
 
-    TowerType(Texture[] textures, ProjectileType projectileType, float range, float firingRate, int cost) {
+    TowerType(String name, Texture[] textures, ProjectileType projectileType,
+              String soundName, float range, float firingRate, int cost) {
+        this.name = name;
         this.textures = textures;
         this.projectileType = projectileType;
+        this.soundName = soundName;
         this.range = range;
         this.firingRate = firingRate;
         this.cost = cost;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public int getCost() {
@@ -41,6 +48,18 @@ public enum TowerType {
 
     public float getRange() {
         return range;
+    }
+
+    public void setRange(float range) {
+        this.range = range;
+    }
+
+    public float getFiringRate() {
+        return firingRate;
+    }
+
+    public void setFiringRate(float firingRate) {
+        this.firingRate = firingRate;
     }
 
     public ProjectileType getProjectileType() {

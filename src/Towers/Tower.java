@@ -4,8 +4,11 @@ import Data.Enemy;
 import Data.Entity;
 import Graphics.Tile;
 import Helpers.Clock;
+import Helpers.MyThread;
+import Helpers.Sound;
 import org.newdawn.slick.opengl.Texture;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -26,25 +29,8 @@ public abstract class Tower implements Entity {
     private Texture[] textures;
     public ArrayList<Projectile> projectiles;
     public TowerType type;
-
-    public Tower(TowerType type, Tile startTile, CopyOnWriteArrayList<Enemy> enemies) {
-        this.type = type;
-        this.textures = type.textures;
-        this.x = startTile.getX();
-        this.y = startTile.getY();
-        this.width = startTile.getWidth();
-        this.height = startTile.getHeight();
-        this.cost = type.cost;
-        this.range = type.range;
-        this.firingRate = type.firingRate;
-        this.level = 1;
-        this.targeted = false;
-        this.working = true;
-        this.timeSinceLastShot = 0;
-        this.angle = 0f;
-        this.enemies = enemies;
-        this.projectiles = new ArrayList<Projectile>();
-    }
+    private File soundFile;
+    private Sound sound;
 
     public Tower(TowerType type, CopyOnWriteArrayList<Enemy> enemies) {
         this.type = type;
@@ -61,6 +47,10 @@ public abstract class Tower implements Entity {
         this.angle = 0f;
         this.enemies = enemies;
         this.projectiles = new ArrayList<Projectile>();
+        this.soundFile = new File("res\\sounds\\" + type.soundName);
+        this.sound = new Sound(soundFile);
+
+        //  this.soundThread = new MyThread("switch23"); //////////////
     }
 
     private Enemy acquireTarget() {
@@ -191,6 +181,10 @@ public abstract class Tower implements Entity {
         return cost;
     }
 
+    public void setCost(int cost) {
+        this.cost = cost;
+    }
+
     public float getRange() {
         return range;
     }
@@ -205,5 +199,9 @@ public abstract class Tower implements Entity {
 
     public void setLevel(int level) {
         this.level = level;
+    }
+
+    public Sound getSound() {
+        return sound;
     }
 }

@@ -13,61 +13,63 @@ import static Helpers.Artist.TILE_SIZE;
  */
 public class EnemyBigTank extends Enemy {
 
-    private float timeSinceLastSpawn, spawnTime;
+  /*  private float timeSinceLastMiniSpawn, miniSpawnTime;
     private Enemy miniEnemy;
     private Wave miniWave;
-    private CopyOnWriteArrayList<Enemy> enemyList;
-    private int enemiesPerWave, enemiesSpawned;
-    private boolean waveCompleted;
+    private CopyOnWriteArrayList<Enemy> miniEnemyList;
+    private int enemiesPerMiniWave, miniEnemiesSpawned;
+    private boolean miniWaveCompleted;  */
 
     public EnemyBigTank(EnemyType enemyType, int tileX, int tileY, TileGrid grid) {
         super(enemyType, tileX, tileY, grid);
-        this.spawnTime = 0.5f;
-        this.enemiesPerWave = 3;
-        this.enemiesSpawned = 0;
-        this.timeSinceLastSpawn = 0;
-        this.enemyList = new CopyOnWriteArrayList<Enemy>();
-        this.waveCompleted = false;
+       /* this.miniSpawnTime = 0.5f;
+        this.enemiesPerMiniWave = 3;
+        this.miniEnemiesSpawned = 0;
+        this.timeSinceLastMiniSpawn = 0;
+        this.miniEnemyList = new CopyOnWriteArrayList<Enemy>();
+        this.miniWaveCompleted = false;  */
     }
 
-    @Override
+   /* @Override
     void die() {
-       // super.die();
-
-       miniUpdate();
+        super.die();
     }
 
-    public void miniUpdate() {
+    private void miniUpdate() {
+        System.out.println("miniUP");
         boolean allEnemiesDead = true;
-        if (enemiesSpawned < enemiesPerWave) {
-            timeSinceLastSpawn += Clock.INSTANCE.delta();
-            if (timeSinceLastSpawn > spawnTime) {
+        if (miniEnemiesSpawned < enemiesPerMiniWave) {
+            timeSinceLastMiniSpawn += Clock.INSTANCE.delta();
+            if (timeSinceLastMiniSpawn > miniSpawnTime) {
                 miniSpawn();
-                timeSinceLastSpawn = 0;
+                timeSinceLastMiniSpawn = 0;
             }
         }
-        for (Enemy enemy : enemyList) {
+        for (Enemy enemy : miniEnemyList) {
             if (enemy.isAlive()) {
                 allEnemiesDead = false;
                 enemy.update();
                 enemy.draw();
-            } else enemyList.remove(enemy);
+            } else miniEnemyList.remove(enemy);
         }
         if (allEnemiesDead) {
-            enemyList.clear();
-            waveCompleted = true;
+            miniEnemyList.clear();
+            miniWaveCompleted = true;
         }
     }
 
     private void miniSpawn() {
+        System.out.println("Spawned");
         miniEnemy = new EnemyPlane(EnemyType.Plane,
-                (int) (getX() / TILE_SIZE), (int) ((HEIGHT - getY() - 1) / TILE_SIZE), getGrid());
-        enemyList.add(miniEnemy);
+                (int) (super.getX() / TILE_SIZE), (int) ((HEIGHT - super.getY() - 1) / TILE_SIZE), super.getGrid());
+        miniEnemyList.add(miniEnemy);
     }
 
     @Override
     public void update() {
         super.update();
+        System.out.println("UP");
        miniUpdate();
-    }
+       miniSpawn();
+    }*/
 }

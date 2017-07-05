@@ -4,6 +4,7 @@ import Data.*;
 import Graphics.TileGrid;
 import Helpers.Clock;
 import Helpers.LevelManager;
+import Helpers.Sound;
 import Helpers.StateManager;
 import Towers.*;
 import UI.UI;
@@ -69,7 +70,7 @@ public class Game {
                 waveManager = new WaveManager(enemyTypes, 2, 9, 1.3f);
                 break;
             case "res\\maps\\newMarvelousMap3":
-                waveManager = new WaveManager(enemyTypes, 1.2f, 15, 1.75f);
+                waveManager = new WaveManager(enemyTypes, 1.2f, 15, 1.55f);
                 break;
             default:
                 waveManager = new WaveManager(enemyTypes, 3, 8, 1.25f);
@@ -145,11 +146,15 @@ public class Game {
                 if (towerPickerMenu.isButtonClicked("Mortal"))
                     player.pickTower(new TowerMortal(TowerType.Mortal, waveManager.getCurrentWave().getEnemies()));
 
-                if (gameUI.isButtonClicked("cancelActive")) player.setHoldingTower(false);
+                if (gameUI.isButtonClicked("cancelActive")) {
+                    player.setHoldingTower(false);
+                    Sound.playSound("res\\sounds\\click1.wav");
+                }
 
                 if (gameUI.isButtonClicked("Quit")) {
                     Restart();
                     StateManager.INSTANCE.setState(StateManager.GameState.MAINMENU);
+                    Sound.playSound("res\\sounds\\click1.wav");
                 }
             }
         }

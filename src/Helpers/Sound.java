@@ -44,7 +44,7 @@ public class Sound {
     }
 
     //Запуск
-	/*
+    /*
 	  breakOld определяет поведение, если звук уже играется
 	  Если reakOld==true, о звук будет прерван и запущен заново
 	  Иначе ничего не произойдёт
@@ -81,11 +81,11 @@ public class Sound {
 	  x долже быть в пределах от 0 до 1 (от самого тихого к самому громкому)
 	*/
     public void setVolume(float x) {
-        if (x<0) x = 0;
-        if (x>1) x = 1;
+        if (x < 0) x = 0;
+        if (x > 1) x = 1;
         float min = volumeC.getMinimum();
         float max = volumeC.getMaximum();
-        volumeC.setValue((max-min)*x+min);
+        volumeC.setValue((max - min) * x + min);
     }
 
     //Возвращает текущую громкость (число от 0 до 1)
@@ -93,16 +93,17 @@ public class Sound {
         float v = volumeC.getValue();
         float min = volumeC.getMinimum();
         float max = volumeC.getMaximum();
-        return (v-min)/(max-min);
+        return (v - min) / (max - min);
     }
 
     //Дожидается окончания проигрывания звука
     public void join() {
         if (!released) return;
-        synchronized(clip) {
+        synchronized (clip) {
             try {
                 while (playing) clip.wait();
-            } catch (InterruptedException exc) {}
+            } catch (InterruptedException exc) {
+            }
         }
     }
 
@@ -114,11 +115,16 @@ public class Sound {
         return snd;
     }
 
+    public static Sound playSound(Sound snd) {
+        snd.play();
+        return snd;
+    }
+
     private class Listener implements LineListener {
         public void update(LineEvent ev) {
             if (ev.getType() == LineEvent.Type.STOP) {
                 playing = false;
-                synchronized(clip) {
+                synchronized (clip) {
                     clip.notify();
                 }
             }

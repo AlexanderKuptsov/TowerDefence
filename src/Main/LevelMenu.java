@@ -1,5 +1,6 @@
 package Main;
 
+import Helpers.Sound;
 import Helpers.StateManager;
 import UI.UI;
 import org.newdawn.slick.opengl.Texture;
@@ -33,28 +34,33 @@ public class LevelMenu {
             StateManager.INSTANCE.setMapName("res\\maps\\newMarvelousMap1");
             StateManager.INSTANCE.setStartedPlaceX(0);
             StateManager.INSTANCE.setStartedPlaceY(5);
-            StateManager.INSTANCE.setStartedMoney(75);
+            StateManager.INSTANCE.setStartedMoney(90);
             StateManager.INSTANCE.setStartedLives(5);
             StateManager.INSTANCE.setState(StateManager.GameState.GAME);
+            Sound.playSound("res\\sounds\\click1.wav");
         }
         if (menuUI.isButtonClicked("Level 2")) {
             StateManager.INSTANCE.setMapName("res\\maps\\newMarvelousMap2");
             StateManager.INSTANCE.setStartedPlaceX(0);
             StateManager.INSTANCE.setStartedPlaceY(5);
-            StateManager.INSTANCE.setStartedMoney(80);
+            StateManager.INSTANCE.setStartedMoney(100);
             StateManager.INSTANCE.setStartedLives(5);
             StateManager.INSTANCE.setState(StateManager.GameState.GAME);
+            Sound.playSound("res\\sounds\\click1.wav");
         }
         if (menuUI.isButtonClicked("Level 3")) {
             StateManager.INSTANCE.setMapName("res\\maps\\newMarvelousMap3");
             StateManager.INSTANCE.setStartedPlaceX(0);
             StateManager.INSTANCE.setStartedPlaceY(2);
-            StateManager.INSTANCE.setStartedMoney(100);
+            StateManager.INSTANCE.setStartedMoney(115);
             StateManager.INSTANCE.setStartedLives(5);
             StateManager.INSTANCE.setState(StateManager.GameState.GAME);
+            Sound.playSound("res\\sounds\\click1.wav");
         }
-        if (menuUI.isButtonClicked("Menu"))
+        if (menuUI.isButtonClicked("Menu")) {
             StateManager.INSTANCE.setState(StateManager.GameState.MAINMENU);
+            Sound.playSound("res\\sounds\\click1.wav");
+        }
     }
 
     public void update() {

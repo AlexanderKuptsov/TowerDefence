@@ -1,6 +1,7 @@
 package Towers;
 
 import Data.Enemy;
+import Helpers.Sound;
 
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -43,10 +44,13 @@ public class ProjectileShuriken extends Projectile {
     @Override
     public void update() {
         super.update();
-        if (super.getX() > WIDTH - 4 * TILE_SIZE || super.getY() > HEIGHT) super.setAlive(false);
+        if (super.getX() > WIDTH - 3 * TILE_SIZE || super.getY() > HEIGHT ||
+                super.getX() < -TILE_SIZE || super.getY() < -TILE_SIZE)
+            super.setAlive(false);
     }
 
     public void draw() {
+        if (angle % 90 == 0) Sound.playSound("res\\sounds\\blade.wav").setVolume(0.9f);
         angle += 12;
         drawQuadTextureRotation(super.getTexture(), super.getX(), super.getY(),
                 super.getWidth(), super.getHeight(), angle);

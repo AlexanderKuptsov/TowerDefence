@@ -12,6 +12,7 @@ import static Helpers.Artist.*;
  */
 public abstract class Projectile implements Entity {
 
+    ProjectileType type;
     private Texture texture;
     private float x, y, speed, damage, xVelocity, yVelocity;
     private int width, height;
@@ -19,6 +20,7 @@ public abstract class Projectile implements Entity {
     private boolean alive;
 
     public Projectile(ProjectileType type, Enemy target, float x, float y, int width, int height) {
+        this.type = type;
         this.texture = type.texture;
         this.x = x;
         this.y = y;
@@ -133,4 +135,6 @@ public abstract class Projectile implements Entity {
     public void setAlive(boolean status) {
         alive = status;
     }
+
+
 }

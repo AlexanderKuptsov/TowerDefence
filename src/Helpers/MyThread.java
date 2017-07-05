@@ -2,12 +2,15 @@ package Helpers;
 
 public class MyThread extends Thread {
 
-    public MyThread() {
+    private String name;
+
+    public MyThread(String name) {
         super();
+        System.out.println("new Thread");
     }
 
     @Override
     public void run() {
-        Sound.playSound("res\\sounds\\switch23.wav").join();
+        //
     }
 }

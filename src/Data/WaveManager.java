@@ -38,8 +38,8 @@ public class WaveManager {
 
     private void newWave() {
         if (waveNumber != 0) currentWave.getEnemies().clear();
-        currentWave = new Wave(enemyTypes, timeBetweenEnemies, enemiesPerWave, currentDifMulti);
         waveNumber++;
+        currentWave = new Wave(enemyTypes, timeBetweenEnemies, enemiesPerWave, currentDifMulti, waveNumber);
         currentDifMulti = difficultyMulti;
     }
 

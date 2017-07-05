@@ -4,6 +4,7 @@ import Graphics.TileGrid;
 import Graphics.TileType;
 
 import Helpers.LevelManager;
+import Helpers.Sound;
 import Helpers.StateManager;
 import UI.*;
 import UI.UI.Menu;
@@ -88,9 +89,11 @@ public class Editor {
                     type = TileType.Bush;
                 } else if (tilePickerMenu.isButtonClicked("Stones")) {
                     type = TileType.Stones;
-                } else if (editorUI.isButtonClicked("Quit"))
+
+                } else if (editorUI.isButtonClicked("Quit")) {
                     StateManager.INSTANCE.setState(StateManager.GameState.MAINMENU);
-                else setTile();
+                    Sound.playSound("res\\sounds\\click1.wav");
+                } else setTile();
             }
         }
 

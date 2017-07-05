@@ -3,6 +3,7 @@ package Data;
 import Graphics.Tile;
 import Graphics.TileGrid;
 import Helpers.Clock;
+import Helpers.Sound;
 import org.newdawn.slick.opengl.Texture;
 
 import java.util.ArrayList;
@@ -30,7 +31,7 @@ public class Enemy implements Entity {
     private ArrayList<Checkpoint> checkpoints;
     private int[] directions;
 
-    private short healthLabelHeight = 8;
+    private int healthLabelHeight = TILE_SIZE / 8;
 
     public Enemy(EnemyType enemyType, int tileX, int tileY, TileGrid grid) {
         this.enemyType = enemyType;
@@ -136,6 +137,7 @@ public class Enemy implements Entity {
     private void endOfMazeReached() {
         die();
         modifyLives(-1);
+        Sound.playSound("res\\sounds\\lose1.wav" );
     }
 
     private boolean checkpointReached() {
@@ -235,8 +237,12 @@ public class Enemy implements Entity {
         directions = null;
     }
 
+    public float getHealthPercent() {
+        return health / startHealth;
+    }
+
     public void draw() {
-        float healthPercent = health / startHealth;
+        float healthPercent = getHealthPercent();
         drawQuadTexture(texture, x, y, width, height);
         drawQuadTexture(healthBackGround, x, y - TILE_SIZE / 4, width, healthLabelHeight);
         drawQuadTexture(healthForeGround, x, y - TILE_SIZE / 4, TILE_SIZE * healthPercent, healthLabelHeight);
@@ -244,18 +250,7 @@ public class Enemy implements Entity {
 
         final float lowHealth = 0.3f;
         if (healthPercent < lowHealth) {
-           /* int deltaYPos = 0;
-            final int deltaXPos = (TILE_SIZE * 3) / 4;
-            if (angle == 90 || angle == -90) deltaYPos = TILE_SIZE / 4;
-            drawQuadTextureRotation(quickLoad("fire"),
-                    x + TILE_SIZE / 2 - deltaXPos, y - TILE_SIZE / 2 + deltaYPos,
-                    (int) (TILE_SIZE * 1.5), (int) (TILE_SIZE * 1.5), angle);
-*/
-
-            int deltaYPos = 0;
-            final int deltaXPos = (TILE_SIZE * 3) / 4;
             final int size = (int) (TILE_SIZE * 1.5);
-            if (angle == 90 || angle == -90) deltaYPos = TILE_SIZE / 4;
             drawQuadTextureRotation(quickLoad("fire"),
                     x + TILE_SIZE / 2 - size / 2, y + TILE_SIZE / 2 - size / 2, size, size, angle);
 
@@ -376,5 +371,13 @@ public class Enemy implements Entity {
 
     public EnemyType getEnemyType() {
         return enemyType;
+    }
+
+    public ArrayList<Checkpoint> getCheckpoints() {
+        return checkpoints;
+    }
+
+    public int getCurrentCheckpoint()  {
+        return currentCheckpoint;
     }
 }

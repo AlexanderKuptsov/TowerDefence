@@ -11,16 +11,18 @@ import static Helpers.Artist.quickLoad;
  */
 public enum ProjectileType {
 
-    Rocket(quickLoad("missile"), 7.25f, 525),
-    IceBall(quickLoad("iceCube"), 2, 450),
-    Fire(quickLoad("fire"), 0.85f, 650),
-    Shuriken(quickLoad("shuriken"), 0.775f * Clock.INSTANCE.multiplier(), 400);
+    Rocket(quickLoad("missile"), "boom2.wav", 7.25f, 525),
+    IceBall(quickLoad("iceCube"), "Bottle_Break.wav", 2, 450),
+    Fire(quickLoad("fire"), "", 1f, 666),
+    Shuriken(quickLoad("shuriken"), "", 0.775f * Clock.INSTANCE.multiplier(), 400);
 
     Texture texture;
+    String soundName;
     float damage, speed;
 
-    ProjectileType(Texture texture, float damage, float speed) {
+    ProjectileType(Texture texture, String soundName, float damage, float speed) {
         this.texture = texture;
+        this.soundName = soundName;
         this.damage = damage;
         this.speed = speed;
     }
