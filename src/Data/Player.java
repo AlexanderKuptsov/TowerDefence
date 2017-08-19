@@ -8,6 +8,7 @@ import Towers.Tower;
 import UI.UI;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
+import org.newdawn.slick.opengl.Texture;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -24,12 +25,13 @@ public class Player {
     private TileGrid grid;
     private WaveManager waveManager;
     private ArrayList<Tower> towerList;
-    private boolean leftMouseButtonDown, rightMouseButtonDown, mouseClicked, holdingTower;
+    private boolean leftMouseButtonDown, rightMouseButtonDown, mouseClicked, holdingTower, optionsCreated;
     private Tower tempTower;
     private UI optionsUI;
     private Tile chosenTile;
-    private float upgradeMultiCost, upgradeMulti, sellMultiCost;
+    private float upgradeMultiCost, upgradeDamageMulti, upgradeRangeMulti, sellMultiCost;
     private Sound soundSell, soundUpgrade;
+    private Texture rangeTex;
 
     private final int GAME_WIDTH = WIDTH - TOWER_PICKER_MENU_WIDTH;
 
@@ -41,19 +43,23 @@ public class Player {
         this.rightMouseButtonDown = false;
         this.mouseClicked = true;
         this.holdingTower = false;
+        this.optionsCreated = false;
         this.tempTower = null;
         this.optionsUI = new UI();
         this.chosenTile = null;
-        this.upgradeMultiCost = 0.7f;
-        this.upgradeMulti = 1.4f;
+        this.upgradeMultiCost = 0.65f;
+        this.upgradeDamageMulti = 1.4f;
+        this.upgradeRangeMulti = 1.2f;
         this.sellMultiCost = 0.5f;
-        this.soundSell = new Sound(new File("res\\sounds\\money.wav"));
-        this.soundUpgrade = new Sound(new File("res\\sounds\\upgrade.wav"));
+        this.soundSell = ResourceLoader.SOUNDS_PACK.get("money.wav");
+        this.soundUpgrade = ResourceLoader.SOUNDS_PACK.get("upgrade.wav");
+        this.rangeTex = ResourceLoader.TOWERS_TEXTURES.get("range");
     }
 
     public void update() {
         //Update holding tower
         if (holdingTower && Mouse.getX() < GAME_WIDTH) {
+            if (optionsCreated) deleteOptionMenu();
             float x = getMouseTile().getX();
             float y = getMouseTile().getY();
             float radius = tempTower.getType().getRange();
@@ -63,7 +69,7 @@ public class Player {
             tempTower.setX(x);
             tempTower.setY(y);
             tempTower.draw();
-            drawQuadTexture(quickLoad("range"), rangeX, rangeY, diameter, diameter);
+            drawQuadTexture(rangeTex, rangeX, rangeY, diameter, diameter);
             optionsUI.drawString((int) (x + TILE_SIZE / 2 - 7.6 * (tempTower.getType().getName().length() - 1)), (int) y - TILE_SIZE / 2, tempTower.getType().getName());
         }
 
@@ -82,9 +88,11 @@ public class Player {
         }
         boolean rightMouseClick = Mouse.isButtonDown(1) && !leftMouseButtonDown;
         if (rightMouseClick && !isPlaceFree(getMouseTile())) {
-            if (optionsUI.getButtonList().isEmpty()) createOptionMenu();
+            if (!optionsCreated) createOptionMenu();
             else deleteOptionMenu();
         } else if (rightMouseClick) deleteOptionMenu();
+
+        if (optionsCreated) drawTowerRange(chosenTile);
 
         leftMouseButtonDown = Mouse.isButtonDown(1);
         rightMouseButtonDown = Mouse.isButtonDown(0);
@@ -119,8 +127,16 @@ public class Player {
         mouseClicked = Mouse.isButtonDown(0);
     }
 
-    private void drawTowerRange(Tile tile) {                ///    ///
+    private void drawTowerRange(Tile tile) {                ///    ///    ///
+        float x = tile.getX();
+        float y = tile.getY();
+        float radius = findTower(tile).getRange();                 ///////////
+        float diameter = 2 * radius;
+        float rangeX = x - radius + TILE_SIZE / 2;
+        float rangeY = y - radius + TILE_SIZE / 2;
 
+        drawQuadTexture(rangeTex, rangeX, rangeY, diameter, diameter);
+        // optionsUI.drawString((int) (x + TILE_SIZE / 2 - 7.6 * (tempTower.getType().getName().length() - 1)), (int) y - TILE_SIZE / 2, tempTower.getType().getName());
     }
 
     private void placeTower() {
@@ -145,11 +161,10 @@ public class Player {
 
     private void upgradeTower(Tile mouseTile) {
         Tower t = findTower(mouseTile);
-        int upgradeCost = (int) (t.getCost() * upgradeMultiCost + (t.getLevel() - 1) * 0.2 * t.getCost());
+        int upgradeCost = (int) (t.getCost() * upgradeMultiCost + (t.getLevel() - 1) * 0.1 * t.getCost());
         if (modifyCash(-upgradeCost)) {
-            float currentLevelUpMulti = (float) Math.pow(upgradeMulti, t.getLevel());
-            t.getType().getProjectileType().setDamage((currentLevelUpMulti * t.getType().getProjectileType().getDamage()));
-            t.getType().setRange(currentLevelUpMulti * t.getType().getRange());
+            t.setDamage(upgradeDamageMulti * t.getDamage());
+            t.setRange(upgradeRangeMulti * t.getRange());
 
             t.setLevel(t.getLevel() + 1);
             t.setCost(t.getCost() + upgradeCost);
@@ -168,6 +183,7 @@ public class Player {
     }
 
     private void createOptionMenu() {
+        optionsCreated = true;
         chosenTile = getMouseTile();
         Tower t = findTower(chosenTile);
         int towerCost = t.getCost();
@@ -194,6 +210,7 @@ public class Player {
     }
 
     private void deleteOptionMenu() {
+        optionsCreated = false;
         optionsUI.getButtonList().clear();
         optionsUI.getTextMap().clear();
         chosenTile = null;

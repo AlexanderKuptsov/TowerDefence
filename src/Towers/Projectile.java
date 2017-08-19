@@ -1,6 +1,6 @@
 package Towers;
 
-import Data.Enemy;
+import Enemies.Enemy;
 import Data.Entity;
 import Helpers.Clock;
 import org.newdawn.slick.opengl.Texture;
@@ -26,8 +26,8 @@ public abstract class Projectile implements Entity {
         this.y = y;
         this.width = width;
         this.height = height;
-        this.speed = type.speed;
-        this.damage = type.damage;
+        this.speed = type.getSpeed();
+        this.damage = type.getDamage();
         this.target = target;
         this.alive = true;
         this.xVelocity = 0f;

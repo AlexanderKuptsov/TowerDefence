@@ -1,13 +1,14 @@
 package Data;
 
+import Effects.Blood;
+import Enemies.Enemy;
+import Enemies.EnemyType;
 import Graphics.TileGrid;
 import Helpers.Clock;
 
 import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import static Data.EnemyType.BigTank;
-import static Helpers.Artist.HEIGHT;
 import static Helpers.Artist.TILE_SIZE;
 
 /**
@@ -15,11 +16,12 @@ import static Helpers.Artist.TILE_SIZE;
  */
 public class Wave {
 
-    private float timeSinceLastSpawn, spawnTime, difficultyMulti;
+    private float timeSinceLastSpawn, spawnTime, difficultyMulti, currentWaveMulti;
     private Enemy[] enemyTypes;
     private CopyOnWriteArrayList<Enemy> enemyList;
-    private int enemiesPerWave, enemiesSpawned, numberOfWave;
-    private boolean waveCompleted;
+    private ArrayList<Blood> bloodList;
+    private int enemiesPerWave, enemiesSpawned, numberOfWave, enemiesLeft;
+    private boolean waveCompleted, first;
     private int chosenEnemy;
 
     public Wave(Enemy[] enemyTypes, float spawnTime, int enemiesPerWave, float difficultyMulti, int numberOfWave) {
@@ -29,15 +31,21 @@ public class Wave {
         this.enemiesSpawned = 0;
         this.timeSinceLastSpawn = 0;
         this.enemyList = new CopyOnWriteArrayList<Enemy>();
+        this.bloodList = new ArrayList<Blood>();
         this.waveCompleted = false;
+        this.first = true;
         this.chosenEnemy = 0;
         this.difficultyMulti = difficultyMulti;
         this.numberOfWave = numberOfWave;
-        spawn();
+        this.enemiesLeft = enemiesPerWave;
+        this.currentWaveMulti = (float) Math.pow(difficultyMulti, numberOfWave);
     }
 
     public void update() {
-        boolean allEnemiesDead = true;
+        if (first) {
+            spawn();
+            first = false;
+        }
         if (enemiesSpawned < enemiesPerWave) {
             timeSinceLastSpawn += Clock.INSTANCE.delta();
             if (timeSinceLastSpawn > spawnTime) {
@@ -45,44 +53,52 @@ public class Wave {
                 timeSinceLastSpawn = 0;
             }
         }
+
         for (Enemy enemy : enemyList) {
             if (enemy.isAlive()) {
-                allEnemiesDead = false;
                 enemy.update();
+                if (enemy.isNewMiniEnemy()) {
+                    spawnSpecialUnit(EnemyType.SOLDIER, (int) (enemy.getX() / TILE_SIZE), (int) (enemy.getY() / TILE_SIZE),
+                            enemy.getGrid(), enemy.getCurrentDirection());
+                    enemy.setMiniEnemiesSpawned(enemy.getMiniEnemiesSpawned() + 1);
+                    enemy.setNewMiniEnemy(false);
+                }
+                if (enemy.getEnemyType() == EnemyType.SOLDIER) bloodList.add(enemy.getBlood());
                 enemy.draw();
             } else {
-               /* if (enemy.getEnemyType() == EnemyType.BigTank) {
-                    spawnSpecialUnit(EnemyType.Plane, (int) (enemy.getX() / TILE_SIZE), (int) (enemy.getY() / TILE_SIZE),
-                            enemy.getGrid(), enemy.getCheckpoints().get(enemy.getCurrentCheckpoint()));
-                }  */
                 enemyList.remove(enemy);
+                enemiesLeft--;
             }
         }
-        if (allEnemiesDead) {
+
+        for (Blood blood : bloodList) blood.update();
+
+        if (enemiesLeft == 0) {
             enemyList.clear();
+            bloodList.clear();
             waveCompleted = true;
         }
     }
 
     private void spawn() {
-        //  enemyList.add(new Enemy(enemyType.getTexture(), enemyType.getStartTile(), enemyType.getTileGrid(),
-        //          enemyType.getWidth(), enemyType.getHeight(), enemyType.getSpeed(), enemyType.getHealth()));
         Enemy enemy = new Enemy(enemyTypes[chosenEnemy].getEnemyType(), (int) (enemyTypes[chosenEnemy].getX() / TILE_SIZE),
                 (int) (enemyTypes[chosenEnemy].getY() / TILE_SIZE), enemyTypes[chosenEnemy].getGrid());
-        enemy.setHealth((float) (enemy.getHealth() * Math.pow(difficultyMulti, numberOfWave)));
+        enemy.setHealth(enemy.getHealth() * currentWaveMulti);
         enemy.setStartHealth(enemy.getHealth());
         enemyList.add(enemy);
-        System.out.println("Enemy health: " + enemy.getHealth());
+        //System.out.println("Enemy health: " + enemy.getHealth());
         chosenEnemy++;
         if (chosenEnemy == enemyTypes.length) chosenEnemy = 0;
         enemiesSpawned++;
     }
 
-    private void spawnSpecialUnit(EnemyType specialEnemy, int x, int y, TileGrid grid, Checkpoint firstCheckpoint) {
+    private void spawnSpecialUnit(EnemyType specialEnemy, int x, int y, TileGrid grid, int[] dir) {
         Enemy enemy = new Enemy(specialEnemy, x, y, grid);
-        //enemy.getCheckpoints().set(0, firstCheckpoint);
+        enemy.setHealth(enemy.getHealth() * currentWaveMulti);
+        enemy.setStartHealth(enemy.getHealth());
+        enemy.setCurrentDirection(dir);
         enemyList.add(enemy);
-        System.out.println("Enemy health: " + enemy.getHealth());
+        enemiesLeft++;
     }
 
     public boolean isCompleted() {
@@ -93,7 +109,7 @@ public class Wave {
         return enemyList;
     }
 
-    public void setEnemyList(CopyOnWriteArrayList<Enemy> enemyList) {
-        this.enemyList = enemyList;
+    public int getEnemiesLeft() {
+        return enemiesLeft;
     }
 }

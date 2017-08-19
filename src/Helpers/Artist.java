@@ -35,7 +35,7 @@ public class Artist {
     public static void BeginSession() {
         Display.setTitle("Uncrackable Defence");
 
-        System.out.println("DesktopDisplayMode: " + DESKTOP_WIDTH + "  " + DESKTOP_HEIGHT);
+        System.out.println("DesktopDisplayMode: " + DESKTOP_WIDTH + " / " + DESKTOP_HEIGHT);
         System.out.println("ratio: " + ratioW + "  " + ratioH);
         System.out.println("DisplayMode: " + WIDTH + "  " + HEIGHT);
         System.out.println("TileSize: " + TILE_SIZE);

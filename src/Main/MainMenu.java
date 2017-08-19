@@ -1,5 +1,6 @@
 package Main;
 
+import Data.ResourceLoader;
 import Helpers.Sound;
 import Helpers.StateManager;
 import UI.UI;
@@ -14,10 +15,13 @@ import static Helpers.Artist.*;
 public class MainMenu {
     private Texture background;
     private UI menuUI;
+    private Sound sound;
 
     public MainMenu() {
-        background = quickLoad("mainMenu");
+        background = ResourceLoader.UI_TEXTURES.get("mainMenu");
+        sound = ResourceLoader.SOUNDS_PACK.get("click1.wav");
         menuUI = new UI();
+
         int BUTTON_SIZE = TILE_SIZE * 4;
         menuUI.addButton("Play", "play", WIDTH / 2 - BUTTON_SIZE / 2, (int) (HEIGHT * 0.05f),
                 BUTTON_SIZE, BUTTON_SIZE);
@@ -32,24 +36,20 @@ public class MainMenu {
 
     private void updateButtons() {
         if (menuUI.isButtonClicked("Play")) {
-            StateManager.INSTANCE.setMapName("res\\maps\\newMarvelousMap1");
-            StateManager.INSTANCE.setStartedPlaceX(0);
-            StateManager.INSTANCE.setStartedPlaceY(5);
-            StateManager.INSTANCE.setStartedMoney(90);
-            StateManager.INSTANCE.setStartedLives(5);
+            StateManager.INSTANCE.setMapNum(1);
             StateManager.INSTANCE.setState(StateManager.GameState.GAME);
-            Sound.playSound("res\\sounds\\click1.wav");
+            Sound.playSound(sound);
         }
         if (menuUI.isButtonClicked("Editor")) {
             StateManager.INSTANCE.setState(StateManager.GameState.EDITOR);
-            Sound.playSound("res\\sounds\\click1.wav");
+            Sound.playSound(sound);
         }
         if (menuUI.isButtonClicked("Quit")) {
-            Sound.playSound("res\\sounds\\click1.wav");
+            Sound.playSound(sound);
             System.exit(0);
         }
         if (menuUI.isButtonClicked("Levels")) {
-            Sound.playSound("res\\sounds\\click1.wav");
+            Sound.playSound(sound);
             StateManager.INSTANCE.setState(StateManager.GameState.LEVELMENU);
         }
     }

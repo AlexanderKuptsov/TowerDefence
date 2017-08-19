@@ -1,8 +1,6 @@
 package Towers;
 
-import Data.Enemy;
-import Graphics.Tile;
-import Helpers.MyThread;
+import Enemies.Enemy;
 import Helpers.Sound;
 
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -14,8 +12,11 @@ import static Helpers.Artist.TILE_SIZE;
  */
 public class TowerCannon extends Tower {
 
+    private Sound sound;
+
     public TowerCannon(TowerType type, CopyOnWriteArrayList<Enemy> enemies) {
         super(type, enemies);
+        this.sound = super.getSound();
     }
 
     @Override
@@ -24,6 +25,6 @@ public class TowerCannon extends Tower {
                 super.getX() + TILE_SIZE / 2 - TILE_SIZE / 2,
                 super.getY() + TILE_SIZE / 2 - TILE_SIZE / 2, TILE_SIZE, TILE_SIZE));
 
-        Sound.playSound( super.getSound()).setVolume(0.75f);
+        Sound.playSound(sound).setVolume(0.75f);
     }
 }

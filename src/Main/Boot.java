@@ -1,20 +1,25 @@
 package Main;
 
+import Data.ResourceLoader;
 import Helpers.Clock;
+import Helpers.MyThread;
 import Helpers.StateManager;
 import org.lwjgl.opengl.Display;
 
 import static Helpers.Artist.BeginSession;
-import static Helpers.Artist.*;
 
 /**
  * Created by shurik on 28.04.2017.
  */
 public class Boot {
 
-    public Boot() {
+    private Boot() {
         // Call static method in Artist class to initialize OpenGL calls
         BeginSession();
+
+        // Texture loading
+        MyThread resourceLoader = new MyThread();
+        resourceLoader.run();
 
         // Main game loop
         while (!Display.isCloseRequested()) {

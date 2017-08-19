@@ -1,5 +1,6 @@
 package UI;
 
+import Data.ResourceLoader;
 import org.lwjgl.input.Mouse;
 import org.newdawn.slick.TrueTypeFont;
 
@@ -39,7 +40,7 @@ public class UI {
     }
 
     public void addButton(String name, String textureName, int x, int y, int width, int height) {
-        buttonList.add(new Button(name, quickLoad(textureName), x, y, width, height));
+        buttonList.add(new Button(name, ResourceLoader.UI_TEXTURES.get(textureName), x, y, width, height));
     }
 
     public boolean isButtonClicked(String name) {
@@ -102,8 +103,18 @@ public class UI {
             setButton(b);
         }
 
-        public void quickAdd(String name, String buttonTextureName) {
-            Button b = new Button(name, quickLoad(buttonTextureName), 0, 0);
+        public void quickAddUI(String name, String buttonTextureName) {
+            Button b = new Button(name, ResourceLoader.UI_TEXTURES.get(buttonTextureName), 0, 0);
+            setButton(b);
+        }
+
+        public void quickAddTowers(String name, String buttonTextureName) {
+            Button b = new Button(name, ResourceLoader.TOWERS_TEXTURES.get(buttonTextureName), 0, 0);
+            setButton(b);
+        }
+
+        public void quickAddTerrain(String name, String buttonTextureName) {
+            Button b = new Button(name, ResourceLoader.TERRAIN_TEXTURES.get(buttonTextureName), 0, 0);
             setButton(b);
         }
 
@@ -153,5 +164,9 @@ public class UI {
 
     public Map<Point, String> getTextMap() {
         return textMap;
+    }
+
+    public void setFont(TrueTypeFont font) {
+        this.font = font;
     }
 }

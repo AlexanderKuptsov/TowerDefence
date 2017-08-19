@@ -1,9 +1,8 @@
 package Towers;
 
-import Data.Enemy;
+import Data.ResourceLoader;
+import Enemies.Enemy;
 import Helpers.Sound;
-
-import java.io.File;
 
 /**
  * Created by shurik on 16.05.2017.
@@ -13,7 +12,7 @@ public class ProjectileRocket extends Projectile {
 
     public ProjectileRocket(ProjectileType type, Enemy target, float x, float y, int width, int height) {
         super(type, target, x, y, width, height);
-        this.sound = new Sound(new File("res\\sounds\\" + super.type.soundName));
+        this.sound = ResourceLoader.SOUNDS_PACK.get(super.type.soundName);
     }
 
     @Override

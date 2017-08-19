@@ -1,5 +1,6 @@
 package Main;
 
+import Data.ResourceLoader;
 import Helpers.Sound;
 import Helpers.StateManager;
 import UI.UI;
@@ -13,9 +14,10 @@ import static Helpers.Artist.*;
 public class LevelMenu {
     private Texture background;
     private UI menuUI;
+    private Sound sound;
 
     public LevelMenu() {
-        background = quickLoad("mainMenu");
+        background = ResourceLoader.UI_TEXTURES.get("mainMenu");
         menuUI = new UI();
         int BUTTON_SIZE = TILE_SIZE * 4;
         menuUI.addButton("Level 1", "1", WIDTH / 2 - BUTTON_SIZE / 2, (int) (HEIGHT * 0.05f),
@@ -27,39 +29,29 @@ public class LevelMenu {
 
         menuUI.addButton("Menu", "menu", WIDTH / 2 + BUTTON_SIZE, (int) (HEIGHT * 0.65f),
                 BUTTON_SIZE, BUTTON_SIZE);
+
+        sound = ResourceLoader.SOUNDS_PACK.get("click1.wav");
     }
 
     private void updateButtons() {
         if (menuUI.isButtonClicked("Level 1")) {
-            StateManager.INSTANCE.setMapName("res\\maps\\newMarvelousMap1");
-            StateManager.INSTANCE.setStartedPlaceX(0);
-            StateManager.INSTANCE.setStartedPlaceY(5);
-            StateManager.INSTANCE.setStartedMoney(90);
-            StateManager.INSTANCE.setStartedLives(5);
+            StateManager.INSTANCE.setMapNum(1);
             StateManager.INSTANCE.setState(StateManager.GameState.GAME);
-            Sound.playSound("res\\sounds\\click1.wav");
+            Sound.playSound(sound);
         }
         if (menuUI.isButtonClicked("Level 2")) {
-            StateManager.INSTANCE.setMapName("res\\maps\\newMarvelousMap2");
-            StateManager.INSTANCE.setStartedPlaceX(0);
-            StateManager.INSTANCE.setStartedPlaceY(5);
-            StateManager.INSTANCE.setStartedMoney(100);
-            StateManager.INSTANCE.setStartedLives(5);
+            StateManager.INSTANCE.setMapNum(2);
             StateManager.INSTANCE.setState(StateManager.GameState.GAME);
-            Sound.playSound("res\\sounds\\click1.wav");
+            Sound.playSound(sound);
         }
         if (menuUI.isButtonClicked("Level 3")) {
-            StateManager.INSTANCE.setMapName("res\\maps\\newMarvelousMap3");
-            StateManager.INSTANCE.setStartedPlaceX(0);
-            StateManager.INSTANCE.setStartedPlaceY(2);
-            StateManager.INSTANCE.setStartedMoney(115);
-            StateManager.INSTANCE.setStartedLives(5);
+            StateManager.INSTANCE.setMapNum(3);
             StateManager.INSTANCE.setState(StateManager.GameState.GAME);
-            Sound.playSound("res\\sounds\\click1.wav");
+            Sound.playSound(sound);
         }
         if (menuUI.isButtonClicked("Menu")) {
             StateManager.INSTANCE.setState(StateManager.GameState.MAINMENU);
-            Sound.playSound("res\\sounds\\click1.wav");
+            Sound.playSound(sound);
         }
     }
 

@@ -1,5 +1,6 @@
 package Graphics;
 
+import Data.ResourceLoader;
 import org.newdawn.slick.opengl.Texture;
 
 import static Helpers.Artist.*;
@@ -19,7 +20,7 @@ public class Tile {
         this.width = width;
         this.height = height;
         this.type = type;
-        this.texture = quickLoad(type.textureName);
+        this.texture = ResourceLoader.TERRAIN_TEXTURES.get(type.textureName);
     }
 
     public void draw() {

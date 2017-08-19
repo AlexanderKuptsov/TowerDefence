@@ -1,10 +1,6 @@
 package Helpers;
 
-import Data.Player;
-import Main.Editor;
-import Main.Game;
-import Main.LevelMenu;
-import Main.MainMenu;
+import Main.*;
 
 /**
  * Created by shurik on 06.05.2017.
@@ -13,7 +9,7 @@ public enum StateManager {
     INSTANCE;
 
     public enum GameState {
-        MAINMENU, GAME, EDITOR, LEVELMENU;
+        MAINMENU, GAME, EDITOR, LEVELMENU, VICTORYMENU;
     }
 
     private GameState gameState = GameState.MAINMENU;
@@ -21,15 +17,15 @@ public enum StateManager {
     private Game game;
     private Editor editor;
     private LevelMenu levelMenu;
+    private GameOverMenu gameOverMenu;
 
     private long nextSecond = System.currentTimeMillis() + 1000;
     private int framesInLastSecond = 0;
     private int framesInCurrentSecond = 0;
-    private int startedPlaceX = 0;
-    private int startedPlaceY = 5;
-    private int startedMoney = 75;
-    private int startedLives = 5;
-    private String mapName = "res\\maps\\newMarvelousMap1";
+
+    private int mapNum = 1;
+    private boolean win = false;
+    //private String mapName = "res\\maps\\newMarvelousMap" + mapNum;
 
     public void update() {
         switch (gameState) {
@@ -39,7 +35,10 @@ public enum StateManager {
                 mainMenu.update();
                 break;
             case GAME:
-                if (game == null) game = new Game(mapName, startedPlaceX, startedPlaceY, startedMoney, startedLives);
+                if (game == null) {
+                    game = new Game(mapNum);
+                    gameOverMenu = null;
+                }
                 game.update();
                 break;
             case EDITOR:
@@ -49,6 +48,13 @@ public enum StateManager {
             case LEVELMENU:
                 if (levelMenu == null) levelMenu = new LevelMenu();
                 levelMenu.update();
+                break;
+            case VICTORYMENU:
+                if (gameOverMenu == null) {
+                    gameOverMenu = new GameOverMenu(win);
+                    game = null;
+                }
+                gameOverMenu.update();
         }
 
         long currentTime = System.currentTimeMillis();
@@ -68,23 +74,23 @@ public enum StateManager {
         this.gameState = newState;
     }
 
-    public void setMapName(String mapName) {
-        this.mapName = mapName;
+    public String getMapName() {
+        return "res\\maps\\newMarvelousMap" + mapNum;
     }
 
-    public void setStartedPlaceX(int startedPlaceX) {
-        this.startedPlaceX = startedPlaceX;
+    public int getMapNum() {
+        return mapNum;
     }
 
-    public void setStartedPlaceY(int startedPlaceY) {
-        this.startedPlaceY = startedPlaceY;
+    public void setMapNum(int mapNum) {
+        this.mapNum = mapNum;
     }
 
-    public void setStartedMoney(int startedMoney) {
-        this.startedMoney = startedMoney;
+    public boolean isWin() {
+        return win;
     }
 
-    public void setStartedLives(int startedLives) {
-        this.startedLives = startedLives;
+    public void setWin(boolean win) {
+        this.win = win;
     }
 }

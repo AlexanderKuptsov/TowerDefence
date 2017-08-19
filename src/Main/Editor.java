@@ -1,5 +1,6 @@
 package Main;
 
+import Data.ResourceLoader;
 import Graphics.TileGrid;
 import Graphics.TileType;
 
@@ -24,6 +25,7 @@ public class Editor {
     private TileType type;
     private UI editorUI;
     private Menu tilePickerMenu;
+    private Sound sound;
 
     private static final int TILE_PICKER_MENU_WIDTH = 3 * TILE_SIZE;
     private static final int TILE_PICKER_MENU_HEIGHT = HEIGHT;
@@ -44,11 +46,12 @@ public class Editor {
 
 
     public Editor() {
-        this.background = quickLoad("mainMenu");
-        this.menuBackground = quickLoad("menuBackgroundEditor");
+        this.background = ResourceLoader.UI_TEXTURES.get("mainMenu");
+        this.menuBackground = ResourceLoader.UI_TEXTURES.get("menuBackgroundEditor");
         this.grid = new TileGrid();
         this.type = TileType.Grass;
         setupUI();
+        sound = ResourceLoader.SOUNDS_PACK.get("click1.wav");
     }
 
     private void setupUI() {
@@ -58,12 +61,12 @@ public class Editor {
                 TILE_PICKER_MENU_WIDTH, TILE_PICKER_MENU_HEIGHT,
                 MAX_TILES_IN_ROW, 0);
         tilePickerMenu = editorUI.getMenu("TilePicker");
-        tilePickerMenu.quickAdd("Grass", TileType.Grass.getTextureName());
-        tilePickerMenu.quickAdd("Dirt", TileType.Dirt.getTextureName());
-        tilePickerMenu.quickAdd("Water", TileType.Water.getTextureName());
-        tilePickerMenu.quickAdd("Sand", TileType.Sand.getTextureName());
-        tilePickerMenu.quickAdd("Bush", TileType.Bush.getTextureName());
-        tilePickerMenu.quickAdd("Stones", TileType.Stones.getTextureName());
+        tilePickerMenu.quickAddTerrain("Grass", TileType.Grass.getTextureName());
+        tilePickerMenu.quickAddTerrain("Dirt", TileType.Dirt.getTextureName());
+        tilePickerMenu.quickAddTerrain("Water", TileType.Water.getTextureName());
+        tilePickerMenu.quickAddTerrain("Sand", TileType.Sand.getTextureName());
+        tilePickerMenu.quickAddTerrain("Bush", TileType.Bush.getTextureName());
+        tilePickerMenu.quickAddTerrain("Stones", TileType.Stones.getTextureName());
 
         editorUI.addButton("Quit", "menu",
                 QUITE_BUTTON_X, QUITE_BUTTON_Y, QUITE_BUTTON_WIDTH, QUITE_BUTTON_HEIGHT);
@@ -92,7 +95,7 @@ public class Editor {
 
                 } else if (editorUI.isButtonClicked("Quit")) {
                     StateManager.INSTANCE.setState(StateManager.GameState.MAINMENU);
-                    Sound.playSound("res\\sounds\\click1.wav");
+                    Sound.playSound(sound);
                 } else setTile();
             }
         }

@@ -2,6 +2,8 @@ package Helpers;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -15,13 +17,14 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 public class Sound {
 
     private boolean released = false;
-    private Clip clip = null;
+    private Clip clip;
     private FloatControl volumeC = null;
     private boolean playing = false;
 
-    public Sound(File f) {
+    public Sound(String name) {
         try {
-            AudioInputStream stream = AudioSystem.getAudioInputStream(f);
+            URL viaClass = Sound.class.getResource("/Sounds/" + name);
+            AudioInputStream stream = AudioSystem.getAudioInputStream(viaClass);
             clip = AudioSystem.getClip();
             clip.open(stream);
             clip.addLineListener(new Listener());
@@ -45,7 +48,7 @@ public class Sound {
 
     //Запуск
     /*
-	  breakOld определяет поведение, если звук уже играется
+      breakOld определяет поведение, если звук уже играется
 	  Если reakOld==true, о звук будет прерван и запущен заново
 	  Иначе ничего не произойдёт
 	*/
@@ -77,8 +80,8 @@ public class Sound {
     }
 
     //Установка громкости
-	/*
-	  x долже быть в пределах от 0 до 1 (от самого тихого к самому громкому)
+    /*
+      x долже быть в пределах от 0 до 1 (от самого тихого к самому громкому)
 	*/
     public void setVolume(float x) {
         if (x < 0) x = 0;
@@ -109,8 +112,7 @@ public class Sound {
 
     //Статический метод, для удобства
     public static Sound playSound(String s) {
-        File f = new File(s);
-        Sound snd = new Sound(f);
+        Sound snd = new Sound(s);
         snd.play();
         return snd;
     }

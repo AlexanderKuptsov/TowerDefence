@@ -1,14 +1,12 @@
 package Towers;
 
-import Data.Enemy;
+import Data.ResourceLoader;
+import Enemies.Enemy;
 import Data.Entity;
-import Graphics.Tile;
 import Helpers.Clock;
-import Helpers.MyThread;
 import Helpers.Sound;
 import org.newdawn.slick.opengl.Texture;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -21,7 +19,7 @@ import static Helpers.Artist.drawQuadTextureRotation;
  */
 public abstract class Tower implements Entity {
 
-    private float x, y, timeSinceLastShot, range, firingRate, angle;
+    private float x, y, timeSinceLastShot, damage, range, firingRate, angle;
     private int width, height, cost, level;
     private CopyOnWriteArrayList<Enemy> enemies;
     private boolean targeted, working;
@@ -29,7 +27,6 @@ public abstract class Tower implements Entity {
     private Texture[] textures;
     public ArrayList<Projectile> projectiles;
     public TowerType type;
-    private File soundFile;
     private Sound sound;
 
     public Tower(TowerType type, CopyOnWriteArrayList<Enemy> enemies) {
@@ -38,6 +35,7 @@ public abstract class Tower implements Entity {
         this.width = TILE_SIZE;
         this.height = TILE_SIZE;
         this.cost = type.cost;
+        this.damage = type.getProjectileType().getDamage();
         this.range = type.range;
         this.firingRate = type.firingRate;
         this.level = 1;
@@ -47,10 +45,8 @@ public abstract class Tower implements Entity {
         this.angle = 0f;
         this.enemies = enemies;
         this.projectiles = new ArrayList<Projectile>();
-        this.soundFile = new File("res\\sounds\\" + type.soundName);
-        this.sound = new Sound(soundFile);
+        this.sound = ResourceLoader.SOUNDS_PACK.get(type.soundName);
 
-        //  this.soundThread = new MyThread("switch23"); //////////////
     }
 
     private Enemy acquireTarget() {
@@ -107,7 +103,8 @@ public abstract class Tower implements Entity {
             timeSinceLastShot += Clock.INSTANCE.delta();
 
             for (Projectile p : projectiles) p.update();
-            if (target != null && !target.isAlive() && type != TowerType.Mortal) projectiles.clear();
+            if ((target != null && !target.isAlive() && type != TowerType.Mortal) || enemies.isEmpty())
+                projectiles.clear();
 
             draw();
         }
@@ -185,8 +182,28 @@ public abstract class Tower implements Entity {
         this.cost = cost;
     }
 
+    public float getDamage() {
+        return damage;
+    }
+
+    public void setDamage(float damage) {
+        this.damage = damage;
+    }
+
     public float getRange() {
         return range;
+    }
+
+    public void setRange(float range) {
+        this.range = range;
+    }
+
+    public float getFiringRate() {
+        return firingRate;
+    }
+
+    public void setFiringRate(float firingRate) {
+        this.firingRate = firingRate;
     }
 
     public TowerType getType() {

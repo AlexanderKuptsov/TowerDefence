@@ -1,5 +1,6 @@
 package Towers;
 
+import Data.ResourceLoader;
 import org.newdawn.slick.opengl.Texture;
 
 import static Helpers.Artist.*;
@@ -9,17 +10,18 @@ import static Helpers.Artist.*;
  */
 public enum TowerType {
 
-    CannonPurple("Cannon", new Texture[]{quickLoad("Towers\\towerBase"), quickLoad("Towers\\towerPurpleGun")},
-            ProjectileType.Rocket, "boom1.wav", TILE_SIZE * 3.1f, 1.5f, 22),
+    CannonPurple("Cannon", new Texture[]{quickLoadTower("towerBase"), quickLoadTower("towerPurpleGun")},
+            ProjectileType.Rocket, "boom1.wav", TILE_SIZE * 3.15f, 1.52f, 22),
 
-    CannonIce("IceTower", new Texture[]{quickLoad("Towers\\cannonBaseBlue"), quickLoad("Towers\\cannonGunBlue")},
-            ProjectileType.IceBall, "spell1.aif", TILE_SIZE * 2.5f, 1.75f, 18),
+    CannonIce("IceTower", new Texture[]{quickLoadTower("cannonBaseBlue"), quickLoadTower("cannonGunBlue")},
+            ProjectileType.IceBall, "spell1.aif", TILE_SIZE * 2.5f, 1.75f, 15),
 
-    FlameThrower("FlameThrower", new Texture[]{quickLoad("Towers\\cannonBase"), quickLoad("Towers\\cannonGun")},
+    FlameThrower("FlameThrower", new Texture[]{quickLoadTower("cannonBase"), quickLoadTower("cannonGun")},
             ProjectileType.Fire, "fire.aif", TILE_SIZE * 2.4f, 0.052f, 40),
 
-    Mortal("Mortal", new Texture[]{quickLoad("Towers\\towerBase"), quickLoad("Towers\\towerMortalGun"),
-            quickLoad("shuriken")}, ProjectileType.Shuriken, "blade.wav", TILE_SIZE * 3.8f, 3.28f, 50);
+    Mortal("Mortal", new Texture[]{quickLoadTower("towerBase"), quickLoadTower("towerMortalGun"),
+            ResourceLoader.PROJECTILE_TEXTURES.get("shuriken")},
+            ProjectileType.Shuriken, "blade.wav", TILE_SIZE * 3.8f, 3.28f, 50);
 
     String name, soundName;
     Texture[] textures;
@@ -36,6 +38,10 @@ public enum TowerType {
         this.range = range;
         this.firingRate = firingRate;
         this.cost = cost;
+    }
+
+    private static Texture quickLoadTower(String name) {
+        return ResourceLoader.TOWERS_TEXTURES.get(name);
     }
 
     public String getName() {

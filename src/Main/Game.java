@@ -1,6 +1,7 @@
 package Main;
 
 import Data.*;
+import Enemies.*;
 import Graphics.TileGrid;
 import Helpers.Clock;
 import Helpers.LevelManager;
@@ -25,8 +26,12 @@ public class Game {
     private UI gameUI;
     private Texture menuBackground;
     private Enemy[] enemyTypes;
-    private int startedPlaceX, startedPlaceY, startedMoney, startedLives;
+    private int startedPlaceX, startedPlaceY, startedMoney, startedLives, enemiesPerWave;
+    private float timeBetweenEnemies, difficultyMulti;
     private Menu towerPickerMenu;
+    private Sound sound;
+    private Levels lvl;
+
     public static int Cash, Lives;
 
     private static final int NUMBER_OF_WAVES = 5;
@@ -47,14 +52,18 @@ public class Game {
     private static final int CANCEL_X = WIDTH - TOWER_PICKER_MENU_WIDTH / 2 - CANCEL_WIDTH / 2;
     private static final int CANCEL_Y = TILE_SIZE * 5;
 
-    public Game(String mapName, int startedPlaceX, int startedPlaceY, int startedMoney, int startedLives) {
-        this.startedPlaceX = startedPlaceX;
-        this.startedPlaceY = startedPlaceY;
-        this.startedMoney = startedMoney;
-        this.startedLives = startedLives;
-
+    public Game(int mapNum) {
         // grid = LevelManager.INSTANCE.loadMap(mapName);
-        grid = LevelManager.INSTANCE.setMap(mapName);
+        grid = LevelManager.INSTANCE.setMap(mapNum);
+
+        lvl = Levels.valueOf("LVL" + mapNum);
+        startedPlaceX = lvl.getStartedPlaceX();
+        startedPlaceY = lvl.getStartedPlaceY();
+        startedMoney = lvl.getStartedMoney();
+        startedLives = lvl.getStartedLives();
+        timeBetweenEnemies = lvl.getTimeBetweenEnemies();
+        enemiesPerWave = lvl.getEnemiesPerWave();
+        difficultyMulti = lvl.getDifficultyMulti();
 
         enemyTypes = new Enemy[4];
         enemyTypes[2] = new EnemyTank(EnemyType.Tank, startedPlaceX, startedPlaceY, grid);
@@ -62,25 +71,13 @@ public class Game {
         enemyTypes[0] = new EnemyBigTank(EnemyType.BigTank, startedPlaceX, startedPlaceY, grid);
         enemyTypes[3] = new EnemyPlane(EnemyType.Plane, startedPlaceX, startedPlaceY, grid);
 
-        switch (mapName) {
-            case "res\\maps\\newMarvelousMap1":
-                waveManager = new WaveManager(enemyTypes, 3, 8, 1.25f);
-                break;
-            case "res\\maps\\newMarvelousMap2":
-                waveManager = new WaveManager(enemyTypes, 2, 9, 1.3f);
-                break;
-            case "res\\maps\\newMarvelousMap3":
-                waveManager = new WaveManager(enemyTypes, 1.2f, 15, 1.55f);
-                break;
-            default:
-                waveManager = new WaveManager(enemyTypes, 3, 8, 1.25f);
-                break;
-        }
+        waveManager = new WaveManager(enemyTypes, timeBetweenEnemies, enemiesPerWave, difficultyMulti);
 
         player = new Player(grid, waveManager);
-        this.menuBackground = quickLoad("menuBackground2");
+        this.menuBackground = ResourceLoader.UI_TEXTURES.get("menuBackground2");
         setup(startedMoney, startedLives);
         setupUI();
+        sound = ResourceLoader.SOUNDS_PACK.get("click1.wav");
     }
 
     private void setup(int startedMoney, int startedLives) {
@@ -95,10 +92,10 @@ public class Game {
                 TOWER_PICKER_MENU_WIDTH, TOWER_PICKER_MENU_HEIGHT, MAX_TOWERS_IN_ROW, 0);
         towerPickerMenu = gameUI.getMenu("TowerPicker");
 
-        towerPickerMenu.quickAdd("TowerIce", "Towers\\towerIceFull");
-        towerPickerMenu.quickAdd("FlameThrower", "Towers\\flameThrowerFull");
-        towerPickerMenu.quickAdd("TowerCannonPurple", "Towers\\towerPurpleFull");
-        towerPickerMenu.quickAdd("Mortal", "Towers\\towerMortalFull");
+        towerPickerMenu.quickAddTowers("TowerIce", "towerIceFull");
+        towerPickerMenu.quickAddTowers("FlameThrower", "flameThrowerFull");
+        towerPickerMenu.quickAddTowers("TowerCannonPurple", "towerPurpleFull");
+        towerPickerMenu.quickAddTowers("Mortal", "towerMortalFull");
 
         gameUI.addButton("Quit", "menu",
                 QUITE_BUTTON_X, QUITE_BUTTON_Y, QUITE_BUTTON_WIDTH, QUITE_BUTTON_HEIGHT);
@@ -119,7 +116,9 @@ public class Game {
         gameUI.drawString(TEXT_X, TEXT_Y, "Lives: " + Lives);
         gameUI.drawString(TEXT_X, TEXT_Y + TEXT_GAP, "Cash: " + Cash + " $");
         gameUI.drawString(TEXT_X, TEXT_Y + TEXT_GAP * 2, "Wave: " + waveManager.getWaveNumber());
-        gameUI.drawString(TEXT_X, TEXT_Y + TEXT_GAP * 3, StateManager.INSTANCE.getFramesInLastSecond() + " fps");
+        gameUI.drawString(TEXT_X, TEXT_Y + TEXT_GAP * 3, "Enemies : " + waveManager.getCurrentWave().getEnemiesLeft());
+        gameUI.drawString(TEXT_X, TEXT_Y + TEXT_GAP * 4, StateManager.INSTANCE.getFramesInLastSecond() + " fps");
+
 
         gameUI.drawString(gameUI.getMenu("TowerPicker").getButton("TowerIce").getX() + COST_X_DELTA,
                 gameUI.getMenu("TowerPicker").getButton("TowerIce").getY() + (int) (TILE_SIZE * 1.15),
@@ -148,20 +147,21 @@ public class Game {
 
                 if (gameUI.isButtonClicked("cancelActive")) {
                     player.setHoldingTower(false);
-                    Sound.playSound("res\\sounds\\click1.wav");
+                    Sound.playSound(sound);
                 }
 
                 if (gameUI.isButtonClicked("Quit")) {
                     Restart();
                     StateManager.INSTANCE.setState(StateManager.GameState.MAINMENU);
-                    Sound.playSound("res\\sounds\\click1.wav");
+                    Sound.playSound(sound);
                 }
             }
         }
     }
 
     private void Restart() {
-        StateManager.INSTANCE.setState(StateManager.GameState.MAINMENU);
+        //StateManager.INSTANCE.setState(StateManager.GameState.MAINMENU);
+        StateManager.INSTANCE.setState(StateManager.GameState.VICTORYMENU);
         setup(startedMoney, startedLives);
         waveManager.restartEnemies();
         player.cleanProjectiles();
@@ -179,11 +179,13 @@ public class Game {
 
         if (waveManager.getWaveNumber() > NUMBER_OF_WAVES) {
             System.out.println("Congratulations! You win!");
+            StateManager.INSTANCE.setWin(true);
             Restart();
         }
 
         if (Lives <= 0) {
             System.out.println("Noob! You loose!");
+            StateManager.INSTANCE.setWin(false);
             Restart();
         }
     }

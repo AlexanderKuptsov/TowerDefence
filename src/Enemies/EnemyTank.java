@@ -1,4 +1,4 @@
-package Data;
+package Enemies;
 
 import Graphics.TileGrid;
 

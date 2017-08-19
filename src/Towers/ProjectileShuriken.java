@@ -1,6 +1,7 @@
 package Towers;
 
-import Data.Enemy;
+import Data.ResourceLoader;
+import Enemies.Enemy;
 import Helpers.Sound;
 
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -13,13 +14,17 @@ import static Helpers.Artist.*;
 public class ProjectileShuriken extends Projectile {
 
     private CopyOnWriteArrayList<Enemy> enemies;
-    private float angle;
+    private int angle;
+    private Sound sound;
 
     public ProjectileShuriken(ProjectileType type, Enemy target, CopyOnWriteArrayList<Enemy> enemies,
                               float x, float y, int width, int height) {
         super(type, target, x, y, width, height);
         this.enemies = enemies;
         this.angle = 0;
+        //this.sound = ResourceLoader.SOUNDS_PACK.get(type.soundName);
+        this.sound = new Sound(TowerType.Mortal.soundName);
+        sound.setVolume(0.9f);
     }
 
     public void damage(Enemy e) {
@@ -38,7 +43,7 @@ public class ProjectileShuriken extends Projectile {
 
     @Override
     public void autoAiming() {
-        //no autoAiming
+        //no autoAimin
     }
 
     @Override
@@ -50,8 +55,10 @@ public class ProjectileShuriken extends Projectile {
     }
 
     public void draw() {
-        if (angle % 90 == 0) Sound.playSound("res\\sounds\\blade.wav").setVolume(0.9f);
-        angle += 12;
+        if (angle % 90 == 0) sound.play();
+        int ROTATION_DELTA = 12;
+        angle += ROTATION_DELTA;
+        if (angle >= 3600) angle = 0;
         drawQuadTextureRotation(super.getTexture(), super.getX(), super.getY(),
                 super.getWidth(), super.getHeight(), angle);
     }
